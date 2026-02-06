@@ -3,7 +3,7 @@
 <html lang="en">
 
 <head>
-    <title>Code coverage report for src/tools/balanceReport.ts</title>
+    <title>Code coverage report for src/client/planningHud.ts</title>
     <meta charset="utf-8" />
     <link rel="stylesheet" href="../../prettify.css" />
     <link rel="stylesheet" href="../../base.css" />
@@ -19,13 +19,13 @@
 <body>
 <div class='wrapper'>
     <div class='pad1'>
-        <h1><a href="../../index.html">All files</a> / <a href="index.html">src/tools</a> balanceReport.ts</h1>
+        <h1><a href="../../index.html">All files</a> / <a href="index.html">src/client</a> planningHud.ts</h1>
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>0/44</span>
+                <span class='fraction'>0/53</span>
             </div>
         
             
@@ -46,7 +46,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>0/44</span>
+                <span class='fraction'>0/53</span>
             </div>
         
             
@@ -107,7 +107,16 @@
 <a name='L42'></a><a href='#L42'>42</a>
 <a name='L43'></a><a href='#L43'>43</a>
 <a name='L44'></a><a href='#L44'>44</a>
-<a name='L45'></a><a href='#L45'>45</a></td><td class="line-coverage quiet"><span class="cline-any cline-no">&nbsp;</span>
+<a name='L45'></a><a href='#L45'>45</a>
+<a name='L46'></a><a href='#L46'>46</a>
+<a name='L47'></a><a href='#L47'>47</a>
+<a name='L48'></a><a href='#L48'>48</a>
+<a name='L49'></a><a href='#L49'>49</a>
+<a name='L50'></a><a href='#L50'>50</a>
+<a name='L51'></a><a href='#L51'>51</a>
+<a name='L52'></a><a href='#L52'>52</a>
+<a name='L53'></a><a href='#L53'>53</a>
+<a name='L54'></a><a href='#L54'>54</a></td><td class="line-coverage quiet"><span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -151,50 +160,68 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js"><span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" ><span class="branch-0 cbranch-no" title="branch not covered" >import { writeFile } from "node:fs/promises";</span></span></span>
-<span class="cstat-no" title="statement not covered" >import path from "node:path";</span>
-<span class="cstat-no" title="statement not covered" >import { loadBundleWithOverrides } from "../data/index.js";</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js"><span class="cstat-no" title="statement not covered" >import type { PlayerEconomyState } from "../game/economy.js";<span class="fstat-no" title="function not covered" ><span class="branch-0 cbranch-no" title="branch not covered" ></span></span></span>
+<span class="cstat-no" title="statement not covered" >import type { PlayerRosterState, PlayerCardState } from "../game/roster.js";</span>
+<span class="cstat-no" title="statement not covered" >import type { PlayerSpecialistState } from "../game/specialists.js";</span>
+<span class="cstat-no" title="statement not covered" >import type { ShopState } from "../game/shop.js";</span>
+<span class="cstat-no" title="statement not covered" >import type { RoundPhaseState } from "../game/roundFlow.js";</span>
 <span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" >const run = async (): Promise&lt;void&gt; =&gt; {</span>
-<span class="cstat-no" title="statement not covered" >  const dataDir = path.join(process.cwd(), "data");</span>
-<span class="cstat-no" title="statement not covered" >  const bundle = await loadBundleWithOverrides(dataDir);</span>
+<span class="cstat-no" title="statement not covered" >export interface PlanningHudRosterSummary {</span>
+<span class="cstat-no" title="statement not covered" >  totalUnits: number;</span>
+<span class="cstat-no" title="statement not covered" >  supply: number;</span>
+<span class="cstat-no" title="statement not covered" >  squads: number;</span>
+<span class="cstat-no" title="statement not covered" >  giants: number;</span>
+<span class="cstat-no" title="statement not covered" >  air: number;</span>
+<span class="cstat-no" title="statement not covered" >}</span>
 <span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" >  const report = {</span>
-<span class="cstat-no" title="statement not covered" >    generatedAt: new Date().toISOString(),</span>
-<span class="cstat-no" title="statement not covered" >    units: bundle.units.map((unit) =&gt; ({</span>
-<span class="cstat-no" title="statement not covered" >      id: unit.id,</span>
-<span class="cstat-no" title="statement not covered" >      name: unit.name,</span>
-<span class="cstat-no" title="statement not covered" >      tier: unit.tier,</span>
-<span class="cstat-no" title="statement not covered" >      role: unit.role,</span>
-<span class="cstat-no" title="statement not covered" >      class: unit.class,</span>
-<span class="cstat-no" title="statement not covered" >      cost: unit.cost,</span>
-<span class="cstat-no" title="statement not covered" >      stats: unit.stats</span>
-<span class="cstat-no" title="statement not covered" >    })),</span>
-<span class="cstat-no" title="statement not covered" >    techs: bundle.techs.map((tech) =&gt; ({</span>
-<span class="cstat-no" title="statement not covered" >      id: tech.id,</span>
-<span class="cstat-no" title="statement not covered" >      name: tech.name,</span>
-<span class="cstat-no" title="statement not covered" >      branch: tech.branch,</span>
-<span class="cstat-no" title="statement not covered" >      cost: tech.cost,</span>
-<span class="cstat-no" title="statement not covered" >      modifiers: tech.modifiers</span>
-<span class="cstat-no" title="statement not covered" >    })),</span>
-<span class="cstat-no" title="statement not covered" >    cards: bundle.cards.map((card) =&gt; ({</span>
-<span class="cstat-no" title="statement not covered" >      id: card.id,</span>
-<span class="cstat-no" title="statement not covered" >      name: card.name,</span>
-<span class="cstat-no" title="statement not covered" >      rarity: card.rarity,</span>
-<span class="cstat-no" title="statement not covered" >      type: card.type,</span>
-<span class="cstat-no" title="statement not covered" >      cost: card.cost</span>
-<span class="cstat-no" title="statement not covered" >    }))</span>
+<span class="cstat-no" title="statement not covered" >export interface PlanningHudState {</span>
+<span class="cstat-no" title="statement not covered" >  round: number;</span>
+<span class="cstat-no" title="statement not covered" >  phase: string;</span>
+<span class="cstat-no" title="statement not covered" >  remainingMs: number;</span>
+<span class="cstat-no" title="statement not covered" >  credits: number;</span>
+<span class="cstat-no" title="statement not covered" >  roster: PlanningHudRosterSummary;</span>
+<span class="cstat-no" title="statement not covered" >  shop: ShopState;</span>
+<span class="cstat-no" title="statement not covered" >  specialists: PlayerSpecialistState;</span>
+<span class="cstat-no" title="statement not covered" >  cards: PlayerCardState;</span>
+<span class="cstat-no" title="statement not covered" >}</span>
+<span class="cstat-no" title="statement not covered" ></span>
+<span class="cstat-no" title="statement not covered" >export interface PlanningHudBuildInput {</span>
+<span class="cstat-no" title="statement not covered" >  roundFlow: RoundPhaseState;</span>
+<span class="cstat-no" title="statement not covered" >  economy: PlayerEconomyState;</span>
+<span class="cstat-no" title="statement not covered" >  roster: PlayerRosterState;</span>
+<span class="cstat-no" title="statement not covered" >  shop: ShopState;</span>
+<span class="cstat-no" title="statement not covered" >  specialists: PlayerSpecialistState;</span>
+<span class="cstat-no" title="statement not covered" >  cards: PlayerCardState;</span>
+<span class="cstat-no" title="statement not covered" >}</span>
+<span class="cstat-no" title="statement not covered" ></span>
+<span class="cstat-no" title="statement not covered" >export const buildPlanningHudState = (input: PlanningHudBuildInput): PlanningHudState =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >  const { roster, economy, shop, roundFlow, specialists, cards } = input;</span>
+<span class="cstat-no" title="statement not covered" >  return {</span>
+<span class="cstat-no" title="statement not covered" >    round: roundFlow.getRound(),</span>
+<span class="cstat-no" title="statement not covered" >    phase: roundFlow.getPhase(),</span>
+<span class="cstat-no" title="statement not covered" >    remainingMs: roundFlow.getRemainingMs(),</span>
+<span class="cstat-no" title="statement not covered" >    credits: economy.credits,</span>
+<span class="cstat-no" title="statement not covered" >    roster: {</span>
+<span class="cstat-no" title="statement not covered" >      totalUnits: roster.units.length,</span>
+<span class="cstat-no" title="statement not covered" >      supply: roster.supply,</span>
+<span class="cstat-no" title="statement not covered" >      squads: roster.unitCounts.squad,</span>
+<span class="cstat-no" title="statement not covered" >      giants: roster.unitCounts.giant,</span>
+<span class="cstat-no" title="statement not covered" >      air: roster.unitCounts.air</span>
+<span class="cstat-no" title="statement not covered" >    },</span>
+<span class="cstat-no" title="statement not covered" >    shop,</span>
+<span class="cstat-no" title="statement not covered" >    specialists,</span>
+<span class="cstat-no" title="statement not covered" >    cards</span>
 <span class="cstat-no" title="statement not covered" >  };</span>
-<span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" >  const outputDir = path.join(dataDir, "balance");</span>
-<span class="cstat-no" title="statement not covered" >  await writeFile(path.join(outputDir, "tuning.json"), JSON.stringify(report, null, 2));</span>
-<span class="cstat-no" title="statement not covered" >  console.log(`Balance tuning sheet written to ${path.join(outputDir, "tuning.json")}`);</span>
 <span class="cstat-no" title="statement not covered" >};</span>
-<span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" >run().catch((error) =&gt; {</span>
-<span class="cstat-no" title="statement not covered" >  console.error("Failed to generate balance report", error);</span>
-<span class="cstat-no" title="statement not covered" >  process.exit(1);</span>
-<span class="cstat-no" title="statement not covered" >});</span>
 &nbsp;</pre></td></tr></table></pre>
 
                 <div class='push'></div><!-- for sticky footer -->

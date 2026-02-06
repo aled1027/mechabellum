@@ -3,7 +3,7 @@
 <html lang="en">
 
 <head>
-    <title>Code coverage report for src/sim/damage.ts</title>
+    <title>Code coverage report for src/client/combatOverlay.ts</title>
     <meta charset="utf-8" />
     <link rel="stylesheet" href="../../prettify.css" />
     <link rel="stylesheet" href="../../base.css" />
@@ -19,34 +19,34 @@
 <body>
 <div class='wrapper'>
     <div class='pad1'>
-        <h1><a href="../../index.html">All files</a> / <a href="index.html">src/sim</a> damage.ts</h1>
+        <h1><a href="../../index.html">All files</a> / <a href="index.html">src/client</a> combatOverlay.ts</h1>
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>55/55</span>
+                <span class='fraction'>48/48</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">66.66% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>6/6</span>
+                <span class='fraction'>4/6</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>3/3</span>
+                <span class='fraction'>2/2</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>55/55</span>
+                <span class='fraction'>48/48</span>
             </div>
         
             
@@ -111,14 +111,7 @@
 <a name='L46'></a><a href='#L46'>46</a>
 <a name='L47'></a><a href='#L47'>47</a>
 <a name='L48'></a><a href='#L48'>48</a>
-<a name='L49'></a><a href='#L49'>49</a>
-<a name='L50'></a><a href='#L50'>50</a>
-<a name='L51'></a><a href='#L51'>51</a>
-<a name='L52'></a><a href='#L52'>52</a>
-<a name='L53'></a><a href='#L53'>53</a>
-<a name='L54'></a><a href='#L54'>54</a>
-<a name='L55'></a><a href='#L55'>55</a>
-<a name='L56'></a><a href='#L56'>56</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L49'></a><a href='#L49'>49</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
@@ -128,106 +121,92 @@
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">21x</span>
-<span class="cline-any cline-yes">21x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">393x</span>
-<span class="cline-any cline-yes">393x</span>
-<span class="cline-any cline-yes">393x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">21x</span>
-<span class="cline-any cline-yes">21x</span>
-<span class="cline-any cline-yes">21x</span>
-<span class="cline-any cline-yes">21x</span>
-<span class="cline-any cline-yes">21x</span>
-<span class="cline-any cline-yes">21x</span>
-<span class="cline-any cline-yes">21x</span>
-<span class="cline-any cline-yes">21x</span>
-<span class="cline-any cline-yes">21x</span>
-<span class="cline-any cline-yes">21x</span>
-<span class="cline-any cline-yes">21x</span>
-<span class="cline-any cline-yes">21x</span>
-<span class="cline-any cline-yes">21x</span>
-<span class="cline-any cline-yes">21x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">21x</span>
-<span class="cline-any cline-yes">21x</span>
-<span class="cline-any cline-yes">21x</span>
-<span class="cline-any cline-yes">21x</span>
-<span class="cline-any cline-yes">21x</span>
-<span class="cline-any cline-yes">21x</span>
-<span class="cline-any cline-yes">21x</span>
-<span class="cline-any cline-yes">21x</span>
-<span class="cline-any cline-yes">21x</span>
-<span class="cline-any cline-yes">21x</span>
-<span class="cline-any cline-yes">21x</span>
-<span class="cline-any cline-yes">21x</span>
-<span class="cline-any cline-yes">21x</span>
-<span class="cline-any cline-yes">21x</span>
-<span class="cline-any cline-yes">21x</span>
-<span class="cline-any cline-yes">21x</span>
-<span class="cline-any cline-yes">21x</span>
-<span class="cline-any cline-yes">21x</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import type { AttackType } from "../data/schemas.js";
-import type { SimEvent, UnitInstance } from "./types.js";
-import type { RngStream } from "../core/rng.js";
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import type { PlayerSide } from "../grid/grid.js";
+import type { SimState, StatusEffectType } from "../sim/types.js";
 &nbsp;
-interface DamageResult {
-  hit: boolean;
-  damage: number;
+export interface CombatOverlayConfig {
+  lowHealthThreshold: number;
 }
 &nbsp;
-const getResistance = (unit: UnitInstance, attackType: AttackType): number =&gt; {
-  return unit.stats.resistances?.[attackType] ?? 0;
+export interface CombatUnitOverlay {
+  unitId: string;
+  side: PlayerSide;
+  hpPercent: number;
+  shieldPercent: number;
+  statusEffects: StatusEffectType[];
+  lowHealth: boolean;
+}
+&nbsp;
+export interface CombatOverlayState {
+  tick: number;
+  units: CombatUnitOverlay[];
+}
+&nbsp;
+export const defaultCombatOverlayConfig: CombatOverlayConfig = {
+  lowHealthThreshold: 0.25
 };
 &nbsp;
-export const rollHit = (unit: UnitInstance, rng: RngStream, accuracyOverride?: number): boolean =&gt; {
-  const accuracy = Math.min(1, Math.max(0, accuracyOverride ?? unit.stats.accuracy));
-  return rng.nextFloat() &lt;= accuracy;
-};
+const clampPercent = (value: number): number =&gt; Math.max(0, Math.min(1, value));
 &nbsp;
-export const applyDamage = (
-  target: UnitInstance,
-  baseDamage: number,
-  attackType: AttackType,
-  events: SimEvent[],
-  tick: number,
-  armorMultiplier = 1
-): DamageResult =&gt; {
-  const resistance = getResistance(target, attackType);
-  const modified = baseDamage * (1 - Math.min(0.9, Math.max(0, resistance)));
-  const armorReduction = Math.max(0, target.stats.armor * armorMultiplier);
-  const afterArmor = Math.max(0, modified - armorReduction);
-  let remaining = afterArmor;
-&nbsp;
-  if (target.shield &gt; 0) {
-    const shieldDamage = Math.min(target.shield, remaining);
-    target.shield -= shieldDamage;
-    remaining -= shieldDamage;
-  }
-&nbsp;
-  if (remaining &gt; 0) {
-    target.hp = Math.max(0, target.hp - remaining);
-  }
-&nbsp;
-  events.push({
-    tick,
-    type: "damage",
-    payload: {
-      targetId: target.id,
-      damage: afterArmor,
-      remainingHp: target.hp,
-      remainingShield: target.shield
-    }
-  });
-&nbsp;
-  return { hit: true, damage: afterArmor };
-};
+export const buildCombatOverlayState = (
+  state: SimState,
+  config: CombatOverlayConfig = defaultCombatOverlayConfig
+): CombatOverlayState =&gt; ({
+  tick: state.tick,
+  units: state.units.map((unit) =&gt; {
+    const maxHp = unit.stats.maxHp;
+    const maxShield = unit.stats.maxShield;
+    const hpPercent = maxHp &gt; 0 ? clampPercent(unit.hp / maxHp<span class="branch-0 cbranch-no" title="branch not covered" >) : 0;</span>
+    const shieldPercent = maxShield &gt; 0 ? clampPercent(unit.shield / maxShield<span class="branch-0 cbranch-no" title="branch not covered" >) : 0;</span>
+    const statusEffects = unit.statusEffects.map((effect) =&gt; effect.type);
+    return {
+      unitId: unit.id,
+      side: unit.side,
+      hpPercent,
+      shieldPercent,
+      statusEffects,
+      lowHealth: hpPercent &gt; 0 &amp;&amp; hpPercent &lt;= config.lowHealthThreshold
+    };
+  })
+});
 &nbsp;</pre></td></tr></table></pre>
 
                 <div class='push'></div><!-- for sticky footer -->
