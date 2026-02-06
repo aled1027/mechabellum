@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
+  <rect width="256" height="256" fill="#111827"/>
+  <circle cx="128" cy="128" r="80" fill="#1f2937" stroke="#38bdf8" stroke-width="8"/>
+  <text x="128" y="138" font-size="28" text-anchor="middle" fill="#e5e7eb" font-family="Arial">STUB</text>
+</svg>

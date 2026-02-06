@@ -4,7 +4,10 @@
   "type": "module",
   "private": true,
   "scripts": {
-    "build": "tsc -p tsconfig.json",
+    "dev": "vite",
+    "build": "vite build",
+    "build:types": "tsc -p tsconfig.json",
+    "preview": "vite preview",
     "sim:checksum": "tsx src/sim/runChecksum.ts",
     "replay:validate": "tsx src/sim/replayValidator.ts",
     "balance:report": "tsx src/tools/balanceReport.ts",
@@ -28,6 +31,7 @@
     "prettier": "^3.2.5",
     "tsx": "^4.19.2",
     "typescript": "^5.5.4",
+    "vite": "^5.4.8",
     "vitest": "^1.6.0"
   }
 }
