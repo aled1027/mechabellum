@@ -3,6 +3,7 @@ import type { GridPosition, Orientation } from "../grid/grid.js";
 import { GridModel } from "../grid/grid.js";
 import type { RngService } from "../core/rng.js";
 import type { SimEvent, SimInput, SimState, UnitInstance } from "./types.js";
+import { applyTechModifiers, applyUpgradeModifiers } from "../game/upgrades.js";
 import { buildSquadOffsets } from "./formation.js";
 import { findPath } from "./pathing.js";
 import { selectTarget } from "./targeting.js";
@@ -84,10 +85,21 @@ export class CombatSimulator {
         definition.stats.collisionSize,
         facing
       );
+      const level = Math.max(0, Math.min(3, placement.level ?? 0));
+      const techs = placement.techs ?? [];
       offsets.forEach((offset, index) => {
         const id = `${placement.side}-${definition.id}-${placement.position.x}-${placement.position.y}-${index}`;
         units.push(
-          this.buildUnit(definition, placement.position, facing, id, offset, placement.side)
+          this.buildUnit(
+            definition,
+            placement.position,
+            facing,
+            id,
+            offset,
+            placement.side,
+            level,
+            techs
+          )
         );
       });
     }
@@ -101,8 +113,19 @@ export class CombatSimulator {
     orientation: Orientation,
     id: string,
     offset: GridPosition,
-    side: UnitInstance["side"]
+    side: UnitInstance["side"],
+    level: number,
+    techIds: string[]
   ): UnitInstance {
+    const upgraded = applyUpgradeModifiers(
+      definition.stats,
+      level as 0 | 1 | 2 | 3
+    );
+    const techs = techIds
+      .map((techId) => this.data.techs.find((tech) => tech.id === techId))
+      .filter((tech): tech is NonNullable<typeof tech> => Boolean(tech));
+    const finalStats = applyTechModifiers(upgraded, techs);
+
     return {
       id,
       definitionId: definition.id,
@@ -110,27 +133,27 @@ export class CombatSimulator {
       class: definition.class,
       position: { x: position.x + offset.x, y: position.y + offset.y },
       orientation,
-      hp: definition.stats.hp,
-      shield: definition.stats.shield,
+      hp: finalStats.hp,
+      shield: finalStats.shield,
       stats: {
-        maxHp: definition.stats.hp,
-        armor: definition.stats.armor,
-        maxShield: definition.stats.shield,
-        damage: definition.stats.damage,
-        attackType: definition.stats.attackType,
-        attackSpeed: definition.stats.attackSpeed,
-        range: definition.stats.range,
-        projectileSpeed: definition.stats.projectileSpeed,
-        turnSpeed: definition.stats.turnSpeed,
-        moveSpeed: definition.stats.moveSpeed,
-        collisionSize: definition.stats.collisionSize,
-        targeting: definition.stats.targeting,
-        squadSize: definition.stats.squadSize,
-        accuracy: definition.stats.accuracy,
-        aoeRadius: definition.stats.aoeRadius,
-        homing: definition.stats.homing,
-        resistances: definition.stats.resistances,
-        onHitEffects: definition.stats.onHitEffects.map((effect) => ({
+        maxHp: finalStats.hp,
+        armor: finalStats.armor,
+        maxShield: finalStats.shield,
+        damage: finalStats.damage,
+        attackType: finalStats.attackType,
+        attackSpeed: finalStats.attackSpeed,
+        range: finalStats.range,
+        projectileSpeed: finalStats.projectileSpeed,
+        turnSpeed: finalStats.turnSpeed,
+        moveSpeed: finalStats.moveSpeed,
+        collisionSize: finalStats.collisionSize,
+        targeting: finalStats.targeting,
+        squadSize: finalStats.squadSize,
+        accuracy: finalStats.accuracy,
+        aoeRadius: finalStats.aoeRadius,
+        homing: finalStats.homing,
+        resistances: finalStats.resistances,
+        onHitEffects: finalStats.onHitEffects.map((effect) => ({
           type: effect.type,
           durationTicks: Math.round(effect.duration * this.tps),
           magnitude: effect.magnitude

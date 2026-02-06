@@ -8,3 +8,8 @@ export * from "./grid/placement.js";
 export * from "./server/authoritative.js";
 export * from "./client/interpolation.js";
 export * from "./sim/types.js";
+export * from "./game/economy.js";
+export * from "./game/roster.js";
+export * from "./game/shop.js";
+export * from "./game/upgrades.js";
+export * from "./game/roundFlow.js";

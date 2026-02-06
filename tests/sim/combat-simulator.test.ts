@@ -119,13 +119,13 @@ describe("CombatSimulator", () => {
     const bundle = makeBundle([
       makeUnit({ id: "mover", stats: { moveSpeed: 1, range: 0.5 } }),
       makeUnit({ id: "blocker" }),
-      makeUnit({ id: "enemy", stats: { hp: 5 } }),
+      makeUnit({ id: "enemy", class: "air", stats: { hp: 5 } }),
       makeUnit({ id: "killer", stats: { damage: 20, range: 3 } })
     ]);
     const sim = new CombatSimulator(bundle, new RngService(4), {
       tickMs: 50,
       wreckageDurationMs: 100,
-      blockedRetargetMs: 50
+      blockedRetargetMs: 1000
     });
     sim.init({
       round: 1,

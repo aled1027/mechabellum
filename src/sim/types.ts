@@ -99,5 +99,7 @@ export interface SimInput {
     side: PlayerSide;
     position: GridPosition;
     orientation: Orientation;
+    level?: number;
+    techs?: string[];
   }>;
 }

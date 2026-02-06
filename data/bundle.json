@@ -52,6 +52,8 @@
       "id": "armor_plating",
       "name": "Armor Plating",
       "description": "+15 armor",
+      "branch": "defense",
+      "cost": 30,
       "maxLevel": 1,
       "modifiers": {
         "armor": 15
@@ -64,6 +66,7 @@
       "name": "Supply Drop",
       "rarity": "common",
       "description": "Gain 20 credits",
+      "cost": 15,
       "effects": {
         "credits": 20
       }
