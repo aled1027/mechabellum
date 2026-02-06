@@ -4,11 +4,22 @@ This plan translates the internal GDD into an actionable delivery roadmap. It fo
 
 ---
 
+## 0. Current Status Snapshot (from repo)
+
+- Deterministic sim loop, RNG streams, combat systems (movement, targeting, projectiles, status effects) are implemented in `src/sim` with QA/checksum utilities.
+- Data schemas, loaders, and overrides are in place in `src/data`, plus roster/shop/economy/specialist/card logic in `src/game`.
+- Grid/placement validation and match-room server logic exist, including replay recording and telemetry hooks (`src/grid`, `src/server`, `src/analytics`).
+- Client HUD scaffolding, localization, accessibility utilities, and a WebGL-based renderer are implemented (`src/client`), but the client remains a local/stub experience without full end-user flows.
+- Cloudflare worker/Durable Object integration and matchmaking endpoints are not yet wired in this repo; networking is currently modeled via local match-room logic.
+
+---
+
 ## 1. Delivery Phases & Milestones
 
 ### Phase 0 — Foundations (Weeks 0–2)
 
 **Goal:** Establish the technical backbone for deterministic combat and data-driven content.
+**Status:** Implemented in current codebase (fixed timestep, RNG, schemas, placement validation, overrides).
 
 - **Core Engine Setup**
   - Browser-first client using a JavaScript game engine (WebGL/WebGPU) and deterministic sim rules.
@@ -33,6 +44,7 @@ This plan translates the internal GDD into an actionable delivery roadmap. It fo
 ### Phase 1 — Combat Core (Weeks 3–6)
 
 **Goal:** Implement complete combat simulation with movement, targeting, projectiles, and status effects.
+**Status:** Implemented in `src/sim` with tests.
 
 - **Unit Stat Framework** (GDD §3.1)
   - HP, armor, damage, attack type, speed, range, collision size, flags.
@@ -63,6 +75,7 @@ This plan translates the internal GDD into an actionable delivery roadmap. It fo
 ### Phase 2 — Economy, Shop, and Progression Loop (Weeks 7–9)
 
 **Goal:** Implement the planning phase systems and full loop from round to round.
+**Status:** Implemented in `src/game` (economy/shop/upgrades/round flow).
 
 - **Economy System** (GDD §11)
   - Base income, win bonus, loss streak, interest cap.
@@ -86,6 +99,7 @@ This plan translates the internal GDD into an actionable delivery roadmap. It fo
 ### Phase 3 — Specialists, Cards, and Advanced Systems (Weeks 10–13)
 
 **Goal:** Add strategic layers (specialists and reinforcement cards) and complete combat interactions.
+**Status:** Implemented in `src/game` with effect processing.
 
 - **Specialist System** (GDD §5, §14)
   - Class selection, level unlocks at rounds 1/5/8.
@@ -106,6 +120,7 @@ This plan translates the internal GDD into an actionable delivery roadmap. It fo
 ### Phase 4 — Content Rollout & Balance Pass (Weeks 14–18)
 
 **Goal:** Populate full unit roster and perform balance tuning with telemetry.
+**Status:** Data-driven pipeline in place; full roster/content list still pending completion in data files.
 
 - **Unit Roster Integration** (GDD §3)
   - Tier 1–3 units, giants, air units, rare units.
@@ -126,6 +141,7 @@ This plan translates the internal GDD into an actionable delivery roadmap. It fo
 ### Phase 5 — UI/UX, Replay, and Networking Harden (Weeks 19–22)
 
 **Goal:** Finalize player-facing experience and harden networked determinism.
+**Status:** Replay tooling, telemetry hooks, and HUD scaffolding exist; end-user client flows and live networking are still incomplete.
 
 - **HUD & Planning UI** (GDD §17, §27)
   - Shop layout, unit panel, specialist panel, timers.
@@ -142,9 +158,35 @@ This plan translates the internal GDD into an actionable delivery roadmap. It fo
 
 ---
 
-### Phase 6 — QA, Analytics, and Release Prep (Weeks 23–26)
+### Phase 6 — End-User Playable Client (Weeks 23–26)
+
+**Goal:** Update the game client so the full loop is playable for an end-user without developer tooling.
+**Status:** Not started; current client is a local/stub experience.
+
+- **Client UX Flow**
+  - Title screen, matchmaking/host flow (local or mocked), and round transition UI.
+  - In-game error feedback and phase lock indicators.
+
+- **Interactive Planning UI**
+  - Shop purchases, tech selection, card/specialist panels wired to state.
+  - Drag/drop or click placement with validation feedback.
+
+- **Combat Presentation**
+  - Health bars, damage indicators, basic VFX/audio placeholders.
+  - Replay timeline and speed controls exposed in-game.
+
+- **Asset & Localization Integration**
+  - Hook asset loading into the renderer (sprites/meshes, icons).
+  - Wire localization/accessibility toggles to UI controls.
+
+**Milestone:** A player can launch the client, complete planning/combat loops, and replay the match end-to-end.
+
+---
+
+### Phase 7 — QA, Analytics, and Release Prep (Weeks 27–30)
 
 **Goal:** Ensure stability, measurable telemetry, and shipping readiness.
+**Status:** QA helpers and telemetry hooks exist, but full release prep is pending.
 
 - **QA & Test Plan** (GDD §32)
   - Deterministic checksum regression suite.
@@ -266,6 +308,7 @@ This plan translates the internal GDD into an actionable delivery roadmap. It fo
 - [ ] Specialists + reinforcement cards
 - [ ] Full unit roster + tech catalog
 - [ ] Replay system
+- [ ] End-user playable client flow
 - [ ] Networked authoritative server
 - [ ] QA + analytics + localization/accessibility
 
