@@ -3,7 +3,7 @@ import path from "node:path";
 import { describe, expect, it } from "vitest";
 import { loadBundleWithOverrides } from "../../src/data/index.js";
 import { ServerAuthoritativeSim } from "../../src/server/authoritative.js";
-import { buildCombatSnapshot } from "../../src/sim/qa.js";
+import { buildCombatSnapshot, computeSyncChecksum } from "../../src/sim/qa.js";
 import { loadReplayFixtures } from "../../src/sim/replayValidator.js";
 
 interface SnapshotFixture {
@@ -27,5 +27,23 @@ describe("qa snapshots", () => {
       const expected = snapshots.find((entry) => entry.name === fixture.name);
       expect(expected?.snapshot).toEqual(snapshot);
     }
+  });
+
+  it("computes stable sync checksums", async () => {
+    const dataDir = path.join(process.cwd(), "data");
+    const bundle = await loadBundleWithOverrides(dataDir);
+    const fixtures = await loadReplayFixtures(path.join(dataDir, "replays.json"));
+    const fixture = fixtures[0];
+    if (!fixture) {
+      throw new Error("Missing replay fixture");
+    }
+
+    const sim = new ServerAuthoritativeSim(bundle, fixture.seed, { maxTicks: fixture.maxTicks });
+    sim.applyInput(fixture.input);
+    sim.runTicks(fixture.maxTicks);
+
+    const first = computeSyncChecksum(sim.getState(), sim.getEvents());
+    const second = computeSyncChecksum(sim.getState(), sim.getEvents());
+    expect(first).toBe(second);
   });
 });

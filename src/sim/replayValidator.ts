@@ -28,14 +28,17 @@ const checksum = (payload: unknown): string => {
   return hash.digest("hex");
 };
 
+export const computeReplayChecksum = (state: SimState, events: SimEvent[]): string =>
+  checksum({
+    state: stableState(state),
+    events: stableEvents(events)
+  });
+
 export const runReplay = (bundle: DataBundle, fixture: ReplayFixture): string => {
   const sim = new ServerAuthoritativeSim(bundle, fixture.seed, { maxTicks: fixture.maxTicks });
   sim.applyInput(fixture.input);
   sim.run();
-  return checksum({
-    state: stableState(sim.getState()),
-    events: stableEvents(sim.getEvents())
-  });
+  return computeReplayChecksum(sim.getState(), sim.getEvents());
 };
 
 export const validateReplays = (
@@ -43,6 +46,39 @@ export const validateReplays = (
   fixtures: ReplayFixture[]
 ): Array<{ name: string; checksum: string }> => {
   return fixtures.map((fixture) => ({ name: fixture.name, checksum: runReplay(bundle, fixture) }));
+};
+
+export interface ReplayDeterminismResult {
+  round: number;
+  expected?: string;
+  actual: string;
+  match: boolean;
+}
+
+export const validateReplayPayload = (
+  bundle: DataBundle,
+  payload: {
+    baseSeed: number;
+    rounds: Array<{ round: number; ticks: number; input: SimInput; checksum?: string }>;
+  },
+  tickMs: number = 50
+): ReplayDeterminismResult[] => {
+  return payload.rounds.map((round) => {
+    const sim = new ServerAuthoritativeSim(bundle, payload.baseSeed, {
+      tickMs,
+      maxTicks: round.ticks
+    });
+    sim.applyInput(round.input);
+    sim.runTicks(round.ticks);
+    const actual = computeReplayChecksum(sim.getState(), sim.getEvents());
+    const expected = round.checksum;
+    return {
+      round: round.round,
+      expected,
+      actual,
+      match: expected ? expected === actual : true
+    };
+  });
 };
 
 export const loadReplayFixtures = async (fixturePath: string): Promise<ReplayFixture[]> => {

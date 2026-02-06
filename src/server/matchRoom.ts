@@ -6,10 +6,13 @@ import { defaultLimits } from "../grid/placement.js";
 import { RoundPhaseState } from "../game/roundFlow.js";
 import { resolveCombatOutcome } from "../game/roundFlow.js";
 import type { SimEvent, SimInput, SimState } from "../sim/types.js";
+import type { SimSnapshot } from "../sim/snapshots.js";
 import { ServerAuthoritativeSim } from "./authoritative.js";
-import { ReplayRecorder, type ReplayPayload } from "../sim/replay.js";
+import { ReplayRecorder, type ReplayPayload, type ReplayStorage } from "../sim/replay.js";
 import type { TelemetrySink } from "../analytics/telemetry.js";
 import { buildCombatTelemetryEvent } from "../analytics/telemetry.js";
+import { computeReplayChecksum } from "../sim/replayValidator.js";
+import { computeSyncChecksum } from "../sim/qa.js";
 
 export interface MatchRoomConfig {
   tickMs: number;
@@ -17,6 +20,10 @@ export interface MatchRoomConfig {
   planningMs: number;
   combatMs: number;
   replayVersion: string;
+  replayId?: string;
+  replayStorage?: ReplayStorage;
+  snapshotInterval?: number;
+  snapshotLimit?: number;
   placementLimits?: PlacementLimits;
 }
 
@@ -29,6 +36,8 @@ export interface MatchCombatSnapshot {
   state: SimState;
   events: SimEvent[];
   outcome: ReturnType<typeof resolveCombatOutcome>;
+  checksum: string;
+  snapshots: SimSnapshot[];
 }
 
 export interface MatchSnapshot {
@@ -36,8 +45,14 @@ export interface MatchSnapshot {
   phase: ReturnType<RoundPhaseState["getPhase"]>;
   remainingMs: number;
   inputsReceived: PlayerSide[];
+  revision: number;
   combat?: MatchCombatSnapshot;
   replay?: ReplayPayload;
+}
+
+export interface ResyncSnapshot {
+  reason: "reconnect" | "desync";
+  snapshot: MatchSnapshot;
 }
 
 export interface PlanningSubmissionResult {
@@ -53,6 +68,28 @@ export const defaultMatchRoomConfig: MatchRoomConfig = {
   replayVersion: "1"
 };
 
+const sortPlacements = (placements: SimInput["placements"]): SimInput["placements"] => {
+  return [...placements].sort((a, b) => {
+    const sideOrder = a.side.localeCompare(b.side);
+    if (sideOrder !== 0) {
+      return sideOrder;
+    }
+    const unitOrder = a.unitId.localeCompare(b.unitId);
+    if (unitOrder !== 0) {
+      return unitOrder;
+    }
+    const yOrder = a.position.y - b.position.y;
+    if (yOrder !== 0) {
+      return yOrder;
+    }
+    const xOrder = a.position.x - b.position.x;
+    if (xOrder !== 0) {
+      return xOrder;
+    }
+    return a.orientation - b.orientation;
+  });
+};
+
 export class MatchRoom {
   private readonly players: MatchPlayer[] = [];
   private readonly roundFlow: RoundPhaseState;
@@ -62,6 +99,9 @@ export class MatchRoom {
   private inputsBySide: Map<PlayerSide, SimInput["placements"]> = new Map();
   private round = 0;
   private combatSnapshot?: MatchCombatSnapshot;
+  private readonly replayStorage?: ReplayStorage;
+  private readonly replayId?: string;
+  private revision = 0;
 
   constructor(
     private readonly data: DataBundle,
@@ -75,6 +115,8 @@ export class MatchRoom {
     });
     this.recorder = new ReplayRecorder(baseSeed, config.replayVersion);
     this.placementLimits = config.placementLimits ?? defaultLimits;
+    this.replayStorage = config.replayStorage;
+    this.replayId = config.replayId;
   }
 
   addPlayer(player: MatchPlayer): void {
@@ -89,6 +131,7 @@ export class MatchRoom {
     this.inputsBySide = new Map();
     this.combatSnapshot = undefined;
     this.roundFlow.startRound(round);
+    this.revision += 1;
   }
 
   submitPlanningInput(
@@ -106,10 +149,12 @@ export class MatchRoom {
     if (validationError) {
       return { success: false, error: validationError };
     }
-    const sanitized = placements.map((placement) => ({
-      ...placement,
-      side: player.side
-    }));
+    const sanitized = sortPlacements(
+      placements.map((placement) => ({
+        ...placement,
+        side: player.side
+      }))
+    );
     this.inputsBySide.set(player.side, sanitized);
     this.maybeResolveCombat();
     return { success: true };
@@ -135,6 +180,7 @@ export class MatchRoom {
       phase: this.roundFlow.getPhase(),
       remainingMs: this.roundFlow.getRemainingMs(),
       inputsReceived: Array.from(this.inputsBySide.keys()),
+      revision: this.revision,
       combat: this.combatSnapshot,
       replay: this.recorder.buildPayload()
     };
@@ -146,6 +192,17 @@ export class MatchRoom {
       throw new Error("Player not found");
     }
     return this.getSnapshot();
+  }
+
+  resync(playerId: string, reason: ResyncSnapshot["reason"] = "reconnect"): ResyncSnapshot {
+    const player = this.players.find((entry) => entry.id === playerId);
+    if (!player) {
+      throw new Error("Player not found");
+    }
+    return {
+      reason,
+      snapshot: this.getSnapshot()
+    };
   }
 
   private validatePlacements(
@@ -226,7 +283,7 @@ export class MatchRoom {
     if (!force && this.inputsBySide.size < 2) {
       return;
     }
-    const placements = Array.from(this.inputsBySide.values()).flat();
+    const placements = sortPlacements(Array.from(this.inputsBySide.values()).flat());
     const input: SimInput = {
       round: this.round,
       placements
@@ -234,7 +291,9 @@ export class MatchRoom {
     this.roundFlow.lockPlanning();
     const sim = new ServerAuthoritativeSim(this.data, this.baseSeed, {
       tickMs: this.config.tickMs,
-      maxTicks: this.config.maxTicks
+      maxTicks: this.config.maxTicks,
+      snapshotInterval: this.config.snapshotInterval,
+      snapshotLimit: this.config.snapshotLimit
     });
     sim.applyInput(input);
     sim.run();
@@ -243,10 +302,17 @@ export class MatchRoom {
     this.combatSnapshot = {
       state,
       events,
-      outcome: resolveCombatOutcome(state, this.data)
+      outcome: resolveCombatOutcome(state, this.data),
+      checksum: computeSyncChecksum(state, events),
+      snapshots: sim.getSnapshots()
     };
     this.roundFlow.lockCombat();
-    this.recorder.recordRound(input, state.tick);
+    const checksum = computeReplayChecksum(state, events);
+    this.recorder.recordRound(input, state.tick, checksum);
+    this.revision += 1;
+    if (this.replayStorage && this.replayId) {
+      void this.replayStorage.saveReplay(this.replayId, this.recorder.buildPayload());
+    }
     this.telemetry?.record(
       buildCombatTelemetryEvent(input, state, events, this.combatSnapshot.outcome, this.data, {
         round: this.round

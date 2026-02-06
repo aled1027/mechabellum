@@ -10,6 +10,12 @@ export * from "./server/matchRoom.js";
 export * from "./client/interpolation.js";
 export * from "./client/planningHud.js";
 export * from "./client/replayHud.js";
+export * from "./client/combatHud.js";
+export * from "./client/planningPanels.js";
+export * from "./client/placementInteraction.js";
+export * from "./client/combatOverlay.js";
+export * from "./client/unitInspection.js";
+export * from "./client/replayControls.js";
 export * from "./client/accessibility.js";
 export * from "./client/localization.js";
 export * from "./analytics/telemetry.js";
@@ -26,6 +32,7 @@ export {
   type SimInput
 } from "./sim/types.js";
 export * from "./sim/replay.js";
+export * from "./sim/snapshots.js";
 export * from "./game/economy.js";
 export * from "./game/roster.js";
 export * from "./game/shop.js";

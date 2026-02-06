@@ -6,6 +6,8 @@ import { ServerAuthoritativeSim } from "../../src/server/authoritative.js";
 import {
   TelemetryCollector,
   buildCombatTelemetryEvent,
+  buildNetworkLatencyTelemetryEvent,
+  computeLatencyMetrics,
   summarizeTelemetry
 } from "../../src/analytics/telemetry.js";
 
@@ -64,5 +66,16 @@ describe("telemetry", () => {
     expect(event.type).toBe("combat_end");
     expect(event.ticks).toBe(state.tick);
     expect(event.survivors.north).toBeGreaterThanOrEqual(0);
+  });
+
+  it("summarizes network latency metrics", () => {
+    const metrics = computeLatencyMetrics([30, 50, 40]);
+    const event = buildNetworkLatencyTelemetryEvent([30, 50, 40]);
+    const summary = summarizeTelemetry([event]);
+
+    expect(metrics.avgRtt).toBeCloseTo(40);
+    expect(metrics.jitter).toBeCloseTo(15);
+    expect(summary.network.samples).toBe(3);
+    expect(summary.network.avgRtt).toBeCloseTo(40);
   });
 });

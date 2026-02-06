@@ -12,7 +12,8 @@ export type TelemetryEventType =
   | "economy_spend"
   | "shop_reroll"
   | "shop_lock"
-  | "combat_end";
+  | "combat_end"
+  | "network_latency";
 
 export interface TelemetryContext {
   playerId?: string;
@@ -68,13 +69,22 @@ export interface CombatTelemetryEvent extends BaseTelemetryEvent {
   timeToKill: Partial<Record<"north" | "south", number>>;
 }
 
+export interface NetworkLatencyTelemetryEvent extends BaseTelemetryEvent {
+  type: "network_latency";
+  rttMs: number;
+  jitterMs: number;
+  sampleCount: number;
+  packetLoss?: number;
+}
+
 export type TelemetryEventInput =
   | UnitPickTelemetryEvent
   | TechPickTelemetryEvent
   | CardPickTelemetryEvent
   | EconomyTelemetryEvent
   | ShopTelemetryEvent
-  | CombatTelemetryEvent;
+  | CombatTelemetryEvent
+  | NetworkLatencyTelemetryEvent;
 
 export type TelemetryEvent = TelemetryEventInput & { timestamp: number };
 
@@ -123,6 +133,13 @@ export interface TelemetrySummary {
     deaths: number;
     wins: Record<"north" | "south" | "draw", number>;
   };
+  network: {
+    samples: number;
+    avgRtt: number;
+    avgJitter: number;
+    maxRtt: number;
+    maxJitter: number;
+  };
 }
 
 export const summarizeTelemetry = (events: TelemetryEventInput[]): TelemetrySummary => {
@@ -132,8 +149,11 @@ export const summarizeTelemetry = (events: TelemetryEventInput[]): TelemetrySumm
     cardPicks: {},
     economy: { spend: 0, income: 0, byReason: {} },
     shop: { rerolls: 0, locks: 0, spend: 0 },
-    combat: { matches: 0, totalDamage: 0, deaths: 0, wins: { north: 0, south: 0, draw: 0 } }
+    combat: { matches: 0, totalDamage: 0, deaths: 0, wins: { north: 0, south: 0, draw: 0 } },
+    network: { samples: 0, avgRtt: 0, avgJitter: 0, maxRtt: 0, maxJitter: 0 }
   };
+  let totalRtt = 0;
+  let totalJitter = 0;
 
   for (const event of events) {
     switch (event.type) {
@@ -180,10 +200,76 @@ export const summarizeTelemetry = (events: TelemetryEventInput[]): TelemetrySumm
         summary.combat.deaths += event.deaths;
         summary.combat.wins[event.winner] += 1;
         break;
+      case "network_latency":
+        summary.network.samples += event.sampleCount;
+        totalRtt += event.rttMs * event.sampleCount;
+        totalJitter += event.jitterMs * event.sampleCount;
+        summary.network.maxRtt = Math.max(summary.network.maxRtt, event.rttMs);
+        summary.network.maxJitter = Math.max(summary.network.maxJitter, event.jitterMs);
+        break;
     }
   }
 
+  if (summary.network.samples > 0) {
+    summary.network.avgRtt = totalRtt / summary.network.samples;
+    summary.network.avgJitter = totalJitter / summary.network.samples;
+  }
+
   return summary;
+};
+
+export interface LatencyMetrics {
+  avgRtt: number;
+  jitter: number;
+  maxRtt: number;
+  minRtt: number;
+  sampleCount: number;
+}
+
+export const computeLatencyMetrics = (samples: number[]): LatencyMetrics => {
+  if (samples.length === 0) {
+    throw new Error("Latency samples cannot be empty");
+  }
+  let total = 0;
+  let maxRtt = -Infinity;
+  let minRtt = Infinity;
+  let jitterTotal = 0;
+  for (let i = 0; i < samples.length; i += 1) {
+    const value = samples[i];
+    total += value;
+    maxRtt = Math.max(maxRtt, value);
+    minRtt = Math.min(minRtt, value);
+    if (i > 0) {
+      jitterTotal += Math.abs(value - samples[i - 1]);
+    }
+  }
+  const avgRtt = total / samples.length;
+  const jitter = samples.length > 1 ? jitterTotal / (samples.length - 1) : 0;
+  return {
+    avgRtt,
+    jitter,
+    maxRtt,
+    minRtt,
+    sampleCount: samples.length
+  };
+};
+
+export const buildNetworkLatencyTelemetryEvent = (
+  samples: number[],
+  context?: TelemetryContext,
+  timestamp?: number,
+  packetLoss?: number
+): NetworkLatencyTelemetryEvent => {
+  const metrics = computeLatencyMetrics(samples);
+  return {
+    type: "network_latency",
+    rttMs: metrics.avgRtt,
+    jitterMs: metrics.jitter,
+    sampleCount: metrics.sampleCount,
+    packetLoss,
+    context,
+    timestamp
+  };
 };
 
 interface UnitSideIndex {

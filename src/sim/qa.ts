@@ -66,3 +66,24 @@ export const buildCombatSnapshot = (state: SimState, events: SimEvent[]): Combat
     totalDamage: roundValue(totalDamage, 2)
   };
 };
+
+const hashString = (value: string): string => {
+  let hash = 5381;
+  for (let i = 0; i < value.length; i += 1) {
+    hash = (hash * 33) ^ value.charCodeAt(i);
+  }
+  return (hash >>> 0).toString(16);
+};
+
+export const computeSyncChecksum = (state: SimState, events: SimEvent[]): string => {
+  const snapshot = buildCombatSnapshot(state, events);
+  return hashString(JSON.stringify(snapshot));
+};
+
+export const computeStateChecksum = (state: SimState): string => {
+  const payload = {
+    tick: state.tick,
+    units: buildUnitBehaviorSnapshot(state)
+  };
+  return hashString(JSON.stringify(payload));
+};

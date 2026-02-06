@@ -1,3 +1,4 @@
+import { z } from "zod";
 import type { DataBundle } from "../data/schemas.js";
 import type { SimEvent, SimInput, SimState } from "./types.js";
 import { ServerAuthoritativeSim } from "../server/authoritative.js";
@@ -8,6 +9,7 @@ export interface ReplayRound {
   seed: number;
   ticks: number;
   input: SimInput;
+  checksum?: string;
 }
 
 export interface ReplayPayload {
@@ -15,6 +17,54 @@ export interface ReplayPayload {
   baseSeed: number;
   rounds: ReplayRound[];
 }
+
+const ReplayRoundSchema = z.object({
+  round: z.number().int().nonnegative(),
+  seed: z.number().int(),
+  ticks: z.number().int().nonnegative(),
+  input: z.object({
+    round: z.number().int().nonnegative(),
+    placements: z.array(
+      z.object({
+        unitId: z.string(),
+        side: z.enum(["north", "south"]),
+        position: z.object({ x: z.number(), y: z.number() }),
+        orientation: z.union([z.literal(0), z.literal(90), z.literal(180), z.literal(270)]),
+        level: z.number().int().optional(),
+        techs: z.array(z.string()).optional()
+      })
+    )
+  }),
+  checksum: z.string().optional()
+});
+
+const ReplayPayloadSchema = z.object({
+  version: z.string().min(1),
+  baseSeed: z.number().int(),
+  rounds: z.array(ReplayRoundSchema)
+});
+
+export interface ReplayStorage {
+  saveReplay(id: string, payload: ReplayPayload): Promise<void>;
+  loadReplay(id: string): Promise<ReplayPayload | undefined>;
+}
+
+export class InMemoryReplayStorage implements ReplayStorage {
+  private readonly entries = new Map<string, ReplayPayload>();
+
+  async saveReplay(id: string, payload: ReplayPayload): Promise<void> {
+    this.entries.set(id, payload);
+  }
+
+  async loadReplay(id: string): Promise<ReplayPayload | undefined> {
+    return this.entries.get(id);
+  }
+}
+
+export const serializeReplayPayload = (payload: ReplayPayload): string => JSON.stringify(payload);
+
+export const parseReplayPayload = (payload: string): ReplayPayload =>
+  ReplayPayloadSchema.parse(JSON.parse(payload));
 
 export interface ReplayRunResult {
   state: SimState;
@@ -49,7 +99,7 @@ export class ReplayRecorder {
     private readonly version: string = "1"
   ) {}
 
-  recordRound(input: SimInput, ticks: number): void {
+  recordRound(input: SimInput, ticks: number, checksum?: string): void {
     if (!Number.isInteger(ticks) || ticks < 0) {
       throw new Error("ticks must be a non-negative integer");
     }
@@ -57,7 +107,8 @@ export class ReplayRecorder {
       round: input.round,
       seed: computeRoundSeed(this.baseSeed, input.round),
       ticks,
-      input
+      input,
+      checksum
     });
   }
 

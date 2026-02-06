@@ -8,6 +8,7 @@
     "sim:checksum": "tsx src/sim/runChecksum.ts",
     "replay:validate": "tsx src/sim/replayValidator.ts",
     "balance:report": "tsx src/tools/balanceReport.ts",
+    "load:test": "tsx src/tools/loadTest.ts",
     "test": "vitest run",
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",
