@@ -4,11 +4,7 @@ import { GridModel, type GridPosition, type PlayerSide } from "../grid/grid.js";
 import { ServerAuthoritativeSim } from "../server/authoritative.js";
 import { RoundPhaseState, resolveCombatOutcome } from "../game/roundFlow.js";
 import { createShopState } from "../game/shop.js";
-import {
-  createRosterState,
-  createCardState,
-  type PlayerRosterState
-} from "../game/roster.js";
+import { createRosterState, createCardState, type PlayerRosterState } from "../game/roster.js";
 import { createSpecialistState } from "../game/specialists.js";
 import type { PlayerEconomyState } from "../game/economy.js";
 import { RngService } from "../core/rng.js";
@@ -46,7 +42,7 @@ const loadDataBundle = async (): Promise<DataBundle> => {
   return DataBundleSchema.parse(raw);
 };
 
-const createRosterFromUnits = (units: UnitDefinition[]): PlayerRosterState => {
+export const createRosterFromUnits = (units: UnitDefinition[]): PlayerRosterState => {
   const roster = createRosterState();
   const unitCounts = { squad: 0, giant: 0, air: 0 };
   let supply = 0;
@@ -70,7 +66,7 @@ const createRosterFromUnits = (units: UnitDefinition[]): PlayerRosterState => {
   };
 };
 
-const createPlacements = (
+export const createPlacements = (
   grid: GridModel,
   side: PlayerSide,
   units: UnitDefinition[],
@@ -183,7 +179,7 @@ const updateViewport = (canvas: HTMLCanvasElement, gl: WebGL2RenderingContext) =
   gl.viewport(0, 0, canvas.width, canvas.height);
 };
 
-const positionToClip = (position: GridPosition): [number, number] => {
+export const positionToClip = (position: GridPosition): [number, number] => {
   const nx = position.x / (GridModel.width - 1);
   const ny = position.y / (GridModel.height - 1);
   return [nx * 2 - 1, (1 - ny) * 2 - 1];
@@ -247,7 +243,7 @@ const createHudSection = (title: string) => {
   return { section, value };
 };
 
-const main = async () => {
+export const main = async () => {
   const root = document.querySelector<HTMLDivElement>("#app");
   if (!root) {
     throw new Error("Missing #app root");
@@ -381,4 +377,6 @@ const main = async () => {
   requestAnimationFrame(tick);
 };
 
-void main();
+if (typeof window !== "undefined" && typeof document !== "undefined") {
+  void main();
+}

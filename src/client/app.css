@@ -1,6 +1,11 @@
 :root {
   color-scheme: dark;
-  font-family: "Inter", "Segoe UI", system-ui, -apple-system, sans-serif;
+  font-family:
+    "Inter",
+    "Segoe UI",
+    system-ui,
+    -apple-system,
+    sans-serif;
   background: #0b0f14;
   color: #e5e7eb;
 }
