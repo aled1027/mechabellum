@@ -1,4 +1,4 @@
-import type { DataBundle, CardDefinition, TechDefinition, UnitDefinition } from "../data/schemas.js";
+import type { DataBundle, CardDefinition, UnitDefinition } from "../data/schemas.js";
 import type { RngStream } from "../core/rng.js";
 import type { PlayerEconomyState } from "./economy.js";
 import type { PlayerCardState, PlayerRosterState, PurchaseOutcome } from "./roster.js";

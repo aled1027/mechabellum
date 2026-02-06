@@ -42,6 +42,8 @@ export const TechSchema = z.object({
     id: z.string().min(1),
     name: z.string().min(1),
     description: z.string().min(1),
+    branch: z.string().min(1).optional(),
+    cost: z.number().int().nonnegative().optional(),
     maxLevel: z.number().int().min(1).max(3).default(1),
     modifiers: z.record(z.string(), z.number()).default({})
 });
@@ -50,6 +52,7 @@ export const CardSchema = z.object({
     name: z.string().min(1),
     rarity: z.enum(["common", "rare", "epic", "legendary"]),
     description: z.string().min(1),
+    cost: z.number().int().nonnegative().optional(),
     effects: z.record(z.string(), z.number()).default({})
 });
 export const SpecialistSchema = z.object({

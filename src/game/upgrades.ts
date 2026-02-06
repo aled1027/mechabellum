@@ -54,7 +54,10 @@ export const applyTechModifiers = (
   for (const tech of techs) {
     for (const [key, value] of Object.entries(tech.modifiers)) {
       if (key in next) {
-        next = { ...next, [key]: (next as Record<string, number>)[key] + value };
+        const current = (next as Record<string, unknown>)[key];
+        if (typeof current === "number") {
+          next = { ...next, [key]: current + value };
+        }
       }
     }
   }
