@@ -47,19 +47,61 @@ export const TechSchema = z.object({
     maxLevel: z.number().int().min(1).max(3).default(1),
     modifiers: z.record(z.string(), z.number()).default({})
 });
+export const TriggerSchema = z.enum([
+    "round_start",
+    "round_end",
+    "planning_start",
+    "planning_end",
+    "combat_start",
+    "combat_end",
+    "unit_death",
+    "unit_spawn",
+    "damage_taken"
+]);
+export const EffectKindSchema = z.enum(["credits", "unit-stat"]);
+export const EffectSchema = z.object({
+    kind: EffectKindSchema,
+    amount: z.number(),
+    stat: z.string().optional(),
+    mode: z.enum(["add", "mul"]).default("add"),
+    targetTag: z.string().optional(),
+    targetClass: UnitClassSchema.optional()
+});
 export const CardSchema = z.object({
     id: z.string().min(1),
     name: z.string().min(1),
     rarity: z.enum(["common", "rare", "epic", "legendary"]),
     description: z.string().min(1),
+    type: z.enum(["instant", "timed", "triggered"]),
+    trigger: TriggerSchema.optional(),
+    durationMs: z.number().positive().optional(),
+    cooldownGroup: z.string().optional(),
+    cooldownRounds: z.number().int().nonnegative().optional(),
     cost: z.number().int().nonnegative().optional(),
-    effects: z.record(z.string(), z.number()).default({})
+    effects: z.array(EffectSchema).default([])
+});
+export const SpecialistPassiveSchema = z.object({
+    trigger: TriggerSchema,
+    effects: z.array(EffectSchema).default([])
+});
+export const SpecialistActiveSchema = z.object({
+    trigger: TriggerSchema,
+    cooldownMs: z.number().int().nonnegative().default(0),
+    maxActivationsPerRound: z.number().int().min(1).default(1),
+    effects: z.array(EffectSchema).default([])
+});
+export const SpecialistLevelSchema = z.object({
+    level: z.number().int().min(1).max(3),
+    unlockRound: z.number().int().positive(),
+    passives: z.array(SpecialistPassiveSchema).default([]),
+    active: SpecialistActiveSchema.optional()
 });
 export const SpecialistSchema = z.object({
     id: z.string().min(1),
     name: z.string().min(1),
     description: z.string().min(1),
-    triggers: z.array(z.string()).default([])
+    class: z.enum(["elite", "supply", "tactical"]),
+    levels: z.array(SpecialistLevelSchema)
 });
 export const DataBundleSchema = z.object({
     units: z.array(UnitSchema),

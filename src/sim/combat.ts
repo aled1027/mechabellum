@@ -22,6 +22,8 @@ export interface CombatConfig {
   retargetCooldownMs: number;
   blockedRetargetMs: number;
   wreckageDurationMs: number;
+  saturationAccuracyPenalty: number;
+  saturationMinAccuracyMultiplier: number;
 }
 
 const distance = (a: GridPosition, b: GridPosition): number => {
@@ -64,6 +66,8 @@ export class CombatSimulator {
       retargetCooldownMs: 1500,
       blockedRetargetMs: 3000,
       wreckageDurationMs: 5000,
+      saturationAccuracyPenalty: 0.1,
+      saturationMinAccuracyMultiplier: 0.5,
       ...config
     };
     this.tps = 1000 / this.config.tickMs;
@@ -117,10 +121,7 @@ export class CombatSimulator {
     level: number,
     techIds: string[]
   ): UnitInstance {
-    const upgraded = applyUpgradeModifiers(
-      definition.stats,
-      level as 0 | 1 | 2 | 3
-    );
+    const upgraded = applyUpgradeModifiers(definition.stats, level as 0 | 1 | 2 | 3);
     const techs = techIds
       .map((techId) => this.data.techs.find((tech) => tech.id === techId))
       .filter((tech): tech is NonNullable<typeof tech> => Boolean(tech));
@@ -274,6 +275,14 @@ export class CombatSimulator {
 
   private updateFiring(tick: number): void {
     const rng = this.rngService.stream(`fire-${tick}`);
+    const targetCounts = new Map<string, number>();
+    for (const unit of this.state.units) {
+      if (!unit.targetId) {
+        continue;
+      }
+      targetCounts.set(unit.targetId, (targetCounts.get(unit.targetId) ?? 0) + 1);
+    }
+
     for (const unit of this.sortedUnits()) {
       if (hasStatus(unit, "stun") || hasStatus(unit, "emp")) {
         continue;
@@ -291,7 +300,13 @@ export class CombatSimulator {
       if (dist > unit.stats.range) {
         continue;
       }
-      const hit = rollHit(unit, rng);
+      const saturationCount = targetCounts.get(target.id) ?? 1;
+      const saturationMultiplier = Math.max(
+        this.config.saturationMinAccuracyMultiplier,
+        1 - this.config.saturationAccuracyPenalty * (saturationCount - 1)
+      );
+      const accuracy = unit.stats.accuracy * saturationMultiplier;
+      const hit = rollHit(unit, rng, accuracy);
       if (!hit) {
         this.events.push({
           tick,
@@ -385,13 +400,6 @@ export class CombatSimulator {
       if (!overlap) {
         continue;
       }
-      const priorityDiff = classPriority(unit) - classPriority(other);
-      if (priorityDiff > 0) {
-        continue;
-      }
-      if (priorityDiff === 0 && unit.id < other.id) {
-        continue;
-      }
       return true;
     }
 
@@ -451,7 +459,13 @@ export class CombatSimulator {
   }
 
   private sortedUnits(): UnitInstance[] {
-    return [...this.state.units].sort((a, b) => a.id.localeCompare(b.id));
+    return [...this.state.units].sort((a, b) => {
+      const priorityDelta = classPriority(b) - classPriority(a);
+      if (priorityDelta !== 0) {
+        return priorityDelta;
+      }
+      return a.id.localeCompare(b.id);
+    });
   }
 
   getState(): SimState {

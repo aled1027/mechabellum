@@ -1,8 +1,8 @@
 const getResistance = (unit, attackType) => {
     return unit.stats.resistances?.[attackType] ?? 0;
 };
-export const rollHit = (unit, rng) => {
-    const accuracy = Math.min(1, Math.max(0, unit.stats.accuracy));
+export const rollHit = (unit, rng, accuracyOverride) => {
+    const accuracy = Math.min(1, Math.max(0, accuracyOverride ?? unit.stats.accuracy));
     return rng.nextFloat() <= accuracy;
 };
 export const applyDamage = (target, baseDamage, attackType, events, tick, armorMultiplier = 1) => {

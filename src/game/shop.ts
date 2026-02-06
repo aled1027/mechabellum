@@ -194,13 +194,16 @@ export const generateShopOffers = (
     cost: tech.cost ?? config.defaultTechCost
   }));
 
-  const cardOffers = pickWeightedCards(data.cards, config.cardOfferCount, rng, config.cardRarityWeights).map(
-    (card, index) => ({
-      id: `card-${index}-${card.id}`,
-      cardId: card.id,
-      cost: card.cost ?? config.defaultCardCost
-    })
-  );
+  const cardOffers = pickWeightedCards(
+    data.cards,
+    config.cardOfferCount,
+    rng,
+    config.cardRarityWeights
+  ).map((card, index) => ({
+    id: `card-${index}-${card.id}`,
+    cardId: card.id,
+    cost: card.cost ?? config.defaultCardCost
+  }));
 
   return { unitOffers, techOffers, cardOffers, lockedUnitOffer };
 };
@@ -355,12 +358,7 @@ export const purchaseCardOffer = (
     return { success: false, error: "Card not found" };
   }
 
-  const purchase: PurchaseOutcome = purchaseCard(
-    economy,
-    cardState,
-    card,
-    config.defaultCardCost
-  );
+  const purchase: PurchaseOutcome = purchaseCard(economy, cardState, card, config.defaultCardCost);
   if (!purchase.success || !purchase.economy || !purchase.cards) {
     return { success: false, error: purchase.error };
   }

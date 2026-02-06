@@ -99,18 +99,18 @@ describe("roster purchases", () => {
     expect(techResult.error).toBe("Tech limit reached");
 
     const cardState = { ...createCardState(), cardsPurchasedThisRound: 2 };
-    const cardResult = purchaseCard(
-      createEconomy(200),
-      cardState,
-      bundle.cards[0],
-      10
-    );
+    const cardResult = purchaseCard(createEconomy(200), cardState, bundle.cards[0], 10);
     expect(cardResult.success).toBe(false);
     expect(cardResult.error).toBe("Card purchase limit reached");
   });
 
   it("resets card purchase tracking", () => {
-    const cardState = { cards: ["one"], cardsPurchasedThisRound: 2 };
+    const cardState = {
+      cards: ["one"],
+      cardsPurchasedThisRound: 2,
+      cooldowns: { basic: 1 },
+      activeCards: []
+    };
     const reset = resetCardPurchases(cardState);
     expect(reset.cardsPurchasedThisRound).toBe(0);
     expect(reset.cards).toEqual(["one"]);

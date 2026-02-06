@@ -11,7 +11,9 @@ export const createRosterState = () => ({
 });
 export const createCardState = () => ({
     cards: [],
-    cardsPurchasedThisRound: 0
+    cardsPurchasedThisRound: 0,
+    cooldowns: {},
+    activeCards: []
 });
 export const resetCardPurchases = (state) => ({
     ...state,
@@ -129,6 +131,7 @@ export const purchaseCard = (economy, cardState, card, fallbackCost, config = de
         credits: economy.credits - cost
     };
     const nextCardState = {
+        ...cardState,
         cards: [...cardState.cards, card.id],
         cardsPurchasedThisRound: cardState.cardsPurchasedThisRound + 1
     };

@@ -23,9 +23,19 @@ export interface PlayerRosterState {
   supply: number;
 }
 
+export interface ActiveCardInstance {
+  id: string;
+  cardId: string;
+  trigger?: string;
+  remainingMs?: number;
+  activationsThisRound: number;
+}
+
 export interface PlayerCardState {
   cards: string[];
   cardsPurchasedThisRound: number;
+  cooldowns: Record<string, number>;
+  activeCards: ActiveCardInstance[];
 }
 
 export interface CardPurchaseConfig {
@@ -53,7 +63,9 @@ export const createRosterState = (): PlayerRosterState => ({
 
 export const createCardState = (): PlayerCardState => ({
   cards: [],
-  cardsPurchasedThisRound: 0
+  cardsPurchasedThisRound: 0,
+  cooldowns: {},
+  activeCards: []
 });
 
 export const resetCardPurchases = (state: PlayerCardState): PlayerCardState => ({
@@ -216,6 +228,7 @@ export const purchaseCard = (
     credits: economy.credits - cost
   };
   const nextCardState: PlayerCardState = {
+    ...cardState,
     cards: [...cardState.cards, card.id],
     cardsPurchasedThisRound: cardState.cardsPurchasedThisRound + 1
   };

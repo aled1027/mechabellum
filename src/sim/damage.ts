@@ -11,8 +11,8 @@ const getResistance = (unit: UnitInstance, attackType: AttackType): number => {
   return unit.stats.resistances?.[attackType] ?? 0;
 };
 
-export const rollHit = (unit: UnitInstance, rng: RngStream): boolean => {
-  const accuracy = Math.min(1, Math.max(0, unit.stats.accuracy));
+export const rollHit = (unit: UnitInstance, rng: RngStream, accuracyOverride?: number): boolean => {
+  const accuracy = Math.min(1, Math.max(0, accuracyOverride ?? unit.stats.accuracy));
   return rng.nextFloat() <= accuracy;
 };
 

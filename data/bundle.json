@@ -66,10 +66,16 @@
       "name": "Supply Drop",
       "rarity": "common",
       "description": "Gain 20 credits",
+      "type": "instant",
+      "cooldownGroup": "basic",
+      "cooldownRounds": 1,
       "cost": 15,
-      "effects": {
-        "credits": 20
-      }
+      "effects": [
+        {
+          "kind": "credits",
+          "amount": 20
+        }
+      ]
     }
   ],
   "specialists": [
@@ -77,7 +83,61 @@
       "id": "vanguard",
       "name": "Vanguard",
       "description": "Frontline units gain +10% HP",
-      "triggers": ["round_start"]
+      "class": "elite",
+      "levels": [
+        {
+          "level": 1,
+          "unlockRound": 1,
+          "passives": [
+            {
+              "trigger": "round_start",
+              "effects": [
+                {
+                  "kind": "unit-stat",
+                  "stat": "hp",
+                  "mode": "mul",
+                  "amount": 0.1,
+                  "targetTag": "swarm"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "level": 2,
+          "unlockRound": 5,
+          "passives": [
+            {
+              "trigger": "round_start",
+              "effects": [
+                {
+                  "kind": "unit-stat",
+                  "stat": "armor",
+                  "mode": "add",
+                  "amount": 2
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "level": 3,
+          "unlockRound": 8,
+          "active": {
+            "trigger": "combat_start",
+            "cooldownMs": 15000,
+            "maxActivationsPerRound": 1,
+            "effects": [
+              {
+                "kind": "unit-stat",
+                "stat": "damage",
+                "mode": "mul",
+                "amount": 0.15
+              }
+            ]
+          }
+        }
+      ]
     }
   ]
 }

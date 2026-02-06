@@ -146,4 +146,55 @@ describe("CombatSimulator", () => {
     sim.step(2);
     expect(sim.getState().wreckage).toHaveLength(0);
   });
+
+  it("applies saturation accuracy penalties", () => {
+    const bundle = makeBundle([
+      makeUnit({ id: "attacker-a", stats: { accuracy: 1 } }),
+      makeUnit({ id: "attacker-b", stats: { accuracy: 1 } }),
+      makeUnit({ id: "target", stats: { hp: 20 } })
+    ]);
+    const sim = new CombatSimulator(bundle, new RngService(5), {
+      saturationAccuracyPenalty: 1,
+      saturationMinAccuracyMultiplier: 0
+    });
+    sim.init({
+      round: 1,
+      placements: [
+        { unitId: "attacker-a", side: "north", position: { x: 1, y: 1 }, orientation: 0 },
+        { unitId: "attacker-b", side: "north", position: { x: 1, y: 2 }, orientation: 0 },
+        { unitId: "target", side: "south", position: { x: 1, y: 3 }, orientation: 180 }
+      ]
+    });
+
+    sim.step(1);
+    const misses = sim.getEvents().filter((event) => event.type === "miss");
+    expect(misses.length).toBe(2);
+    const target = sim.getState().units.find((unit) => unit.definitionId === "target");
+    expect(target?.hp).toBe(20);
+  });
+
+  it("prevents giants from overlapping smaller units", () => {
+    const bundle = makeBundle([
+      makeUnit({
+        id: "giant",
+        class: "giant",
+        stats: { moveSpeed: 1, range: 0.5, collisionSize: 1.2 }
+      }),
+      makeUnit({ id: "blocker", stats: { moveSpeed: 0, collisionSize: 0.8 } }),
+      makeUnit({ id: "enemy", stats: { hp: 10 } })
+    ]);
+    const sim = new CombatSimulator(bundle, new RngService(6));
+    sim.init({
+      round: 1,
+      placements: [
+        { unitId: "giant", side: "north", position: { x: 0, y: 0 }, orientation: 0 },
+        { unitId: "blocker", side: "north", position: { x: 0.2, y: 0 }, orientation: 0 },
+        { unitId: "enemy", side: "south", position: { x: 3, y: 0 }, orientation: 180 }
+      ]
+    });
+
+    sim.step(1);
+    const giant = sim.getState().units.find((unit) => unit.definitionId === "giant");
+    expect(giant?.position.x).toBe(0);
+  });
 });
