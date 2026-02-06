@@ -1,0 +1,502 @@
+[
+  {
+    "name": "baseline-skirmish",
+    "snapshot": {
+      "tick": 120,
+      "units": [
+        {
+          "id": "north-crawler-2-1-0",
+          "definitionId": "crawler",
+          "side": "north",
+          "hp": 120,
+          "shield": 0,
+          "position": {
+            "x": 0.56,
+            "y": 0.04
+          },
+          "statusEffects": []
+        },
+        {
+          "id": "north-crawler-2-1-1",
+          "definitionId": "crawler",
+          "side": "north",
+          "hp": 120,
+          "shield": 0,
+          "position": {
+            "x": 1.52,
+            "y": 0.04
+          },
+          "statusEffects": []
+        },
+        {
+          "id": "north-crawler-2-1-10",
+          "definitionId": "crawler",
+          "side": "north",
+          "hp": 120,
+          "shield": 0,
+          "position": {
+            "x": 2.48,
+            "y": 1.96
+          },
+          "statusEffects": []
+        },
+        {
+          "id": "north-crawler-2-1-11",
+          "definitionId": "crawler",
+          "side": "north",
+          "hp": 120,
+          "shield": 0,
+          "position": {
+            "x": 3.44,
+            "y": 1.96
+          },
+          "statusEffects": []
+        },
+        {
+          "id": "north-crawler-2-1-2",
+          "definitionId": "crawler",
+          "side": "north",
+          "hp": 120,
+          "shield": 0,
+          "position": {
+            "x": 2.48,
+            "y": 0.04
+          },
+          "statusEffects": []
+        },
+        {
+          "id": "north-crawler-2-1-3",
+          "definitionId": "crawler",
+          "side": "north",
+          "hp": 120,
+          "shield": 0,
+          "position": {
+            "x": 3.44,
+            "y": 0.04
+          },
+          "statusEffects": []
+        },
+        {
+          "id": "north-crawler-2-1-4",
+          "definitionId": "crawler",
+          "side": "north",
+          "hp": 120,
+          "shield": 0,
+          "position": {
+            "x": 0.56,
+            "y": 1
+          },
+          "statusEffects": []
+        },
+        {
+          "id": "north-crawler-2-1-5",
+          "definitionId": "crawler",
+          "side": "north",
+          "hp": 120,
+          "shield": 0,
+          "position": {
+            "x": 1.52,
+            "y": 1
+          },
+          "statusEffects": []
+        },
+        {
+          "id": "north-crawler-2-1-6",
+          "definitionId": "crawler",
+          "side": "north",
+          "hp": 120,
+          "shield": 0,
+          "position": {
+            "x": 2.48,
+            "y": 1
+          },
+          "statusEffects": []
+        },
+        {
+          "id": "north-crawler-2-1-7",
+          "definitionId": "crawler",
+          "side": "north",
+          "hp": 120,
+          "shield": 0,
+          "position": {
+            "x": 3.44,
+            "y": 1
+          },
+          "statusEffects": []
+        },
+        {
+          "id": "north-crawler-2-1-8",
+          "definitionId": "crawler",
+          "side": "north",
+          "hp": 120,
+          "shield": 0,
+          "position": {
+            "x": 0.56,
+            "y": 1.96
+          },
+          "statusEffects": []
+        },
+        {
+          "id": "north-crawler-2-1-9",
+          "definitionId": "crawler",
+          "side": "north",
+          "hp": 120,
+          "shield": 0,
+          "position": {
+            "x": 1.52,
+            "y": 1.96
+          },
+          "statusEffects": []
+        },
+        {
+          "id": "north-mustang-3-2-0",
+          "definitionId": "mustang",
+          "side": "north",
+          "hp": 180,
+          "shield": 0,
+          "position": {
+            "x": 1.8,
+            "y": 0.8
+          },
+          "statusEffects": []
+        },
+        {
+          "id": "north-mustang-3-2-1",
+          "definitionId": "mustang",
+          "side": "north",
+          "hp": 180,
+          "shield": 0,
+          "position": {
+            "x": 3,
+            "y": 0.8
+          },
+          "statusEffects": []
+        },
+        {
+          "id": "north-mustang-3-2-2",
+          "definitionId": "mustang",
+          "side": "north",
+          "hp": 180,
+          "shield": 0,
+          "position": {
+            "x": 4.2,
+            "y": 0.8
+          },
+          "statusEffects": []
+        },
+        {
+          "id": "north-mustang-3-2-3",
+          "definitionId": "mustang",
+          "side": "north",
+          "hp": 180,
+          "shield": 0,
+          "position": {
+            "x": 1.8,
+            "y": 2
+          },
+          "statusEffects": []
+        },
+        {
+          "id": "north-mustang-3-2-4",
+          "definitionId": "mustang",
+          "side": "north",
+          "hp": 180,
+          "shield": 0,
+          "position": {
+            "x": 3,
+            "y": 2
+          },
+          "statusEffects": []
+        },
+        {
+          "id": "north-mustang-3-2-5",
+          "definitionId": "mustang",
+          "side": "north",
+          "hp": 180,
+          "shield": 0,
+          "position": {
+            "x": 4.2,
+            "y": 2
+          },
+          "statusEffects": []
+        },
+        {
+          "id": "north-mustang-3-2-6",
+          "definitionId": "mustang",
+          "side": "north",
+          "hp": 180,
+          "shield": 0,
+          "position": {
+            "x": 1.8,
+            "y": 3.2
+          },
+          "statusEffects": []
+        },
+        {
+          "id": "north-mustang-3-2-7",
+          "definitionId": "mustang",
+          "side": "north",
+          "hp": 180,
+          "shield": 0,
+          "position": {
+            "x": 3,
+            "y": 3.2
+          },
+          "statusEffects": []
+        },
+        {
+          "id": "south-arclight-8-6-0",
+          "definitionId": "arclight",
+          "side": "south",
+          "hp": 320,
+          "shield": 0,
+          "position": {
+            "x": 7.28,
+            "y": 5.28
+          },
+          "statusEffects": []
+        },
+        {
+          "id": "south-arclight-8-6-1",
+          "definitionId": "arclight",
+          "side": "south",
+          "hp": 320,
+          "shield": 0,
+          "position": {
+            "x": 8.72,
+            "y": 5.28
+          },
+          "statusEffects": []
+        },
+        {
+          "id": "south-arclight-8-6-2",
+          "definitionId": "arclight",
+          "side": "south",
+          "hp": 320,
+          "shield": 0,
+          "position": {
+            "x": 7.28,
+            "y": 6.72
+          },
+          "statusEffects": []
+        },
+        {
+          "id": "south-arclight-8-6-3",
+          "definitionId": "arclight",
+          "side": "south",
+          "hp": 320,
+          "shield": 0,
+          "position": {
+            "x": 8.72,
+            "y": 6.72
+          },
+          "statusEffects": []
+        },
+        {
+          "id": "south-stormcaller-9-5-0",
+          "definitionId": "stormcaller",
+          "side": "south",
+          "hp": 280,
+          "shield": 0,
+          "position": {
+            "x": 8.28,
+            "y": 4.28
+          },
+          "statusEffects": []
+        },
+        {
+          "id": "south-stormcaller-9-5-1",
+          "definitionId": "stormcaller",
+          "side": "south",
+          "hp": 280,
+          "shield": 0,
+          "position": {
+            "x": 9.72,
+            "y": 4.28
+          },
+          "statusEffects": []
+        },
+        {
+          "id": "south-stormcaller-9-5-2",
+          "definitionId": "stormcaller",
+          "side": "south",
+          "hp": 280,
+          "shield": 0,
+          "position": {
+            "x": 8.28,
+            "y": 5.72
+          },
+          "statusEffects": []
+        }
+      ],
+      "deaths": [],
+      "totalDamage": 0
+    }
+  },
+  {
+    "name": "air-duel",
+    "snapshot": {
+      "tick": 150,
+      "units": [
+        {
+          "id": "north-phantom_ray-5-2-0",
+          "definitionId": "phantom_ray",
+          "side": "north",
+          "hp": 260,
+          "shield": 0,
+          "position": {
+            "x": 4.339,
+            "y": 1.492
+          },
+          "statusEffects": []
+        },
+        {
+          "id": "north-phantom_ray-5-2-1",
+          "definitionId": "phantom_ray",
+          "side": "north",
+          "hp": 260,
+          "shield": 0,
+          "position": {
+            "x": 5.661,
+            "y": 1.492
+          },
+          "statusEffects": []
+        },
+        {
+          "id": "north-phantom_ray-5-2-2",
+          "definitionId": "phantom_ray",
+          "side": "north",
+          "hp": 260,
+          "shield": 0,
+          "position": {
+            "x": 4.37,
+            "y": 2.706
+          },
+          "statusEffects": []
+        },
+        {
+          "id": "north-phoenix-4-1-0",
+          "definitionId": "phoenix",
+          "side": "north",
+          "hp": 300,
+          "shield": 0,
+          "position": {
+            "x": 3.072,
+            "y": 1.704
+          },
+          "statusEffects": []
+        },
+        {
+          "id": "north-phoenix-4-1-1",
+          "definitionId": "phoenix",
+          "side": "north",
+          "hp": 300,
+          "shield": 0,
+          "position": {
+            "x": 4.834,
+            "y": 1.011
+          },
+          "statusEffects": []
+        },
+        {
+          "id": "north-phoenix-4-1-2",
+          "definitionId": "phoenix",
+          "side": "north",
+          "hp": 300,
+          "shield": 0,
+          "position": {
+            "x": 3.168,
+            "y": 2.338
+          },
+          "statusEffects": []
+        },
+        {
+          "id": "south-wasp-8-5-0",
+          "definitionId": "wasp",
+          "side": "south",
+          "hp": 180,
+          "shield": 0,
+          "position": {
+            "x": 5.543,
+            "y": 4.089
+          },
+          "statusEffects": []
+        },
+        {
+          "id": "south-wasp-8-5-1",
+          "definitionId": "wasp",
+          "side": "south",
+          "hp": 180,
+          "shield": 0,
+          "position": {
+            "x": 5.38,
+            "y": 3.906
+          },
+          "statusEffects": []
+        },
+        {
+          "id": "south-wasp-8-5-2",
+          "definitionId": "wasp",
+          "side": "south",
+          "hp": 180,
+          "shield": 0,
+          "position": {
+            "x": 5.426,
+            "y": 4.005
+          },
+          "statusEffects": []
+        },
+        {
+          "id": "south-wasp-8-5-3",
+          "definitionId": "wasp",
+          "side": "south",
+          "hp": 180,
+          "shield": 0,
+          "position": {
+            "x": 3.155,
+            "y": 5.316
+          },
+          "statusEffects": []
+        },
+        {
+          "id": "south-wasp-8-5-4",
+          "definitionId": "wasp",
+          "side": "south",
+          "hp": 180,
+          "shield": 0,
+          "position": {
+            "x": 3.156,
+            "y": 5.32
+          },
+          "statusEffects": []
+        },
+        {
+          "id": "south-wraith-7-6-0",
+          "definitionId": "wraith",
+          "side": "south",
+          "hp": 420,
+          "shield": 0,
+          "position": {
+            "x": 5.62,
+            "y": 6
+          },
+          "statusEffects": []
+        },
+        {
+          "id": "south-wraith-7-6-1",
+          "definitionId": "wraith",
+          "side": "south",
+          "hp": 420,
+          "shield": 0,
+          "position": {
+            "x": 5.78,
+            "y": 6
+          },
+          "statusEffects": []
+        }
+      ],
+      "deaths": [],
+      "totalDamage": 0
+    }
+  }
+]

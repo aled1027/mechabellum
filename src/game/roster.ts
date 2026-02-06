@@ -5,6 +5,7 @@ import type { PlayerEconomyState, SupplyConfig } from "./economy.js";
 import { calculateSupplyAdjustedCost, defaultSupplyConfig } from "./economy.js";
 import type { UpgradeConfig, UpgradeLevel } from "./upgrades.js";
 import { canAddTech, defaultUpgradeConfig } from "./upgrades.js";
+import type { TelemetryContext, TelemetrySink } from "../analytics/telemetry.js";
 
 export interface RosterUnit {
   id: string;
@@ -99,7 +100,9 @@ export const purchaseUnit = (
   roster: PlayerRosterState,
   unit: UnitDefinition,
   supplyConfig: SupplyConfig = defaultSupplyConfig,
-  limits: PlacementLimits = defaultLimits
+  limits: PlacementLimits = defaultLimits,
+  telemetry?: TelemetrySink,
+  context?: TelemetryContext
 ): PurchaseOutcome => {
   const limitCheck = canAddUnit(roster, unit, limits);
   if (!limitCheck.success) {
@@ -133,6 +136,14 @@ export const purchaseUnit = (
     supply: roster.supply + unit.cost
   };
 
+  telemetry?.record({
+    type: "unit_pick",
+    unitId: unit.id,
+    cost: supplyCost.cost,
+    supply: nextRoster.supply,
+    context
+  });
+
   return { success: true, economy: nextEconomy, roster: nextRoster, cost: supplyCost.cost };
 };
 
@@ -140,7 +151,9 @@ export const purchaseUpgrade = (
   economy: PlayerEconomyState,
   roster: PlayerRosterState,
   unitId: string,
-  upgradeConfig: UpgradeConfig = defaultUpgradeConfig
+  upgradeConfig: UpgradeConfig = defaultUpgradeConfig,
+  telemetry?: TelemetrySink,
+  context?: TelemetryContext
 ): PurchaseOutcome => {
   const unitIndex = roster.units.findIndex((unit) => unit.id === unitId);
   if (unitIndex < 0) {
@@ -164,6 +177,13 @@ export const purchaseUpgrade = (
   const nextUnits = [...roster.units];
   nextUnits[unitIndex] = { ...unit, level: nextLevel };
 
+  telemetry?.record({
+    type: "economy_spend",
+    amount: cost,
+    reason: "upgrade",
+    context
+  });
+
   return {
     success: true,
     economy: nextEconomy,
@@ -178,7 +198,9 @@ export const purchaseTech = (
   unitId: string,
   tech: TechDefinition,
   allTechs: TechDefinition[],
-  fallbackCost: number
+  fallbackCost: number,
+  telemetry?: TelemetrySink,
+  context?: TelemetryContext
 ): PurchaseOutcome => {
   const unitIndex = roster.units.findIndex((unit) => unit.id === unitId);
   if (unitIndex < 0) {
@@ -201,6 +223,14 @@ export const purchaseTech = (
   const nextUnits = [...roster.units];
   nextUnits[unitIndex] = { ...unit, techs: [...unit.techs, tech.id] };
 
+  telemetry?.record({
+    type: "tech_pick",
+    techId: tech.id,
+    unitId,
+    cost,
+    context
+  });
+
   return {
     success: true,
     economy: nextEconomy,
@@ -214,7 +244,9 @@ export const purchaseCard = (
   cardState: PlayerCardState,
   card: CardDefinition,
   fallbackCost: number,
-  config: CardPurchaseConfig = defaultCardPurchaseConfig
+  config: CardPurchaseConfig = defaultCardPurchaseConfig,
+  telemetry?: TelemetrySink,
+  context?: TelemetryContext
 ): PurchaseOutcome => {
   if (cardState.cardsPurchasedThisRound >= config.maxCardsPerRound) {
     return { success: false, error: "Card purchase limit reached" };
@@ -232,6 +264,13 @@ export const purchaseCard = (
     cards: [...cardState.cards, card.id],
     cardsPurchasedThisRound: cardState.cardsPurchasedThisRound + 1
   };
+
+  telemetry?.record({
+    type: "card_pick",
+    cardId: card.id,
+    cost,
+    context
+  });
 
   return { success: true, economy: nextEconomy, cards: nextCardState, cost };
 };

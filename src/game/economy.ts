@@ -1,3 +1,5 @@
+import type { TelemetryContext, TelemetrySink } from "../analytics/telemetry.js";
+
 export type MatchResult = "win" | "loss" | "draw";
 
 export interface EconomyConfig {
@@ -78,7 +80,9 @@ export const updateStreaks = (
 export const applyEndOfRoundEconomy = (
   economy: PlayerEconomyState,
   result: MatchResult,
-  config: EconomyConfig = defaultEconomyConfig
+  config: EconomyConfig = defaultEconomyConfig,
+  telemetry?: TelemetrySink,
+  context?: TelemetryContext
 ): EconomyUpdate => {
   const nextEconomy = updateStreaks(economy, result);
   const winBonus = result === "win" ? config.winBonus : 0;
@@ -88,6 +92,13 @@ export const applyEndOfRoundEconomy = (
       : 0;
   const interest = calculateInterest(economy.credits, config);
   const total = config.baseIncome + winBonus + lossBonus + interest;
+
+  telemetry?.record({
+    type: "economy_income",
+    amount: total,
+    reason: result,
+    context
+  });
 
   return {
     economy: {

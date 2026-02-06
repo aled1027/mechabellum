@@ -4,6 +4,7 @@ import type { PlayerEconomyState } from "./economy.js";
 import type { PlayerCardState, PlayerRosterState, PurchaseOutcome } from "./roster.js";
 import { purchaseCard, purchaseTech, purchaseUnit } from "./roster.js";
 import type { SupplyConfig } from "./economy.js";
+import type { TelemetryContext, TelemetrySink } from "../analytics/telemetry.js";
 
 export interface ShopUnitOffer {
   id: string;
@@ -223,7 +224,9 @@ export const rerollShop = (
   rng: RngStream,
   state: ShopState,
   economy: PlayerEconomyState,
-  config: ShopConfig = defaultShopConfig
+  config: ShopConfig = defaultShopConfig,
+  telemetry?: TelemetrySink,
+  context?: TelemetryContext
 ): ShopRerollResult => {
   if (state.rerollsUsed >= config.rerollLimit) {
     return { success: false, error: "Reroll limit reached" };
@@ -238,6 +241,12 @@ export const rerollShop = (
   };
   const offers = generateShopOffers(data, rng, config, state.lockedUnitOffer);
 
+  telemetry?.record({
+    type: "shop_reroll",
+    cost: config.rerollCost,
+    context
+  });
+
   return {
     success: true,
     economy: nextEconomy,
@@ -249,7 +258,9 @@ export const lockUnitOffer = (
   state: ShopState,
   economy: PlayerEconomyState,
   offerId: string,
-  config: ShopConfig = defaultShopConfig
+  config: ShopConfig = defaultShopConfig,
+  telemetry?: TelemetrySink,
+  context?: TelemetryContext
 ): ShopLockResult => {
   const offer = state.unitOffers.find((unitOffer) => unitOffer.id === offerId);
   if (!offer) {
@@ -262,6 +273,13 @@ export const lockUnitOffer = (
     ...economy,
     credits: economy.credits - config.lockCost
   };
+
+  telemetry?.record({
+    type: "shop_lock",
+    cost: config.lockCost,
+    context
+  });
+
   return {
     success: true,
     economy: nextEconomy,
@@ -278,7 +296,9 @@ export const purchaseUnitOffer = (
   economy: PlayerEconomyState,
   roster: PlayerRosterState,
   offerId: string,
-  supplyConfig: SupplyConfig
+  supplyConfig: SupplyConfig,
+  telemetry?: TelemetrySink,
+  context?: TelemetryContext
 ): ShopPurchaseResult => {
   const offer = state.unitOffers.find((unitOffer) => unitOffer.id === offerId);
   if (!offer) {
@@ -289,7 +309,7 @@ export const purchaseUnitOffer = (
     return { success: false, error: "Unit not found" };
   }
 
-  const purchase = purchaseUnit(economy, roster, unit, supplyConfig);
+  const purchase = purchaseUnit(economy, roster, unit, supplyConfig, undefined, telemetry, context);
   if (!purchase.success || !purchase.economy || !purchase.roster) {
     return { success: false, error: purchase.error };
   }
@@ -313,7 +333,9 @@ export const purchaseTechOffer = (
   roster: PlayerRosterState,
   offerId: string,
   unitId: string,
-  config: ShopConfig = defaultShopConfig
+  config: ShopConfig = defaultShopConfig,
+  telemetry?: TelemetrySink,
+  context?: TelemetryContext
 ): ShopPurchaseResult => {
   const offer = state.techOffers.find((techOffer) => techOffer.id === offerId);
   if (!offer) {
@@ -324,7 +346,16 @@ export const purchaseTechOffer = (
     return { success: false, error: "Tech not found" };
   }
 
-  const purchase = purchaseTech(economy, roster, unitId, tech, data.techs, config.defaultTechCost);
+  const purchase = purchaseTech(
+    economy,
+    roster,
+    unitId,
+    tech,
+    data.techs,
+    config.defaultTechCost,
+    telemetry,
+    context
+  );
   if (!purchase.success || !purchase.economy || !purchase.roster) {
     return { success: false, error: purchase.error };
   }
@@ -347,7 +378,9 @@ export const purchaseCardOffer = (
   economy: PlayerEconomyState,
   cardState: PlayerCardState,
   offerId: string,
-  config: ShopConfig = defaultShopConfig
+  config: ShopConfig = defaultShopConfig,
+  telemetry?: TelemetrySink,
+  context?: TelemetryContext
 ): ShopPurchaseResult => {
   const offer = state.cardOffers.find((cardOffer) => cardOffer.id === offerId);
   if (!offer) {
@@ -358,7 +391,15 @@ export const purchaseCardOffer = (
     return { success: false, error: "Card not found" };
   }
 
-  const purchase: PurchaseOutcome = purchaseCard(economy, cardState, card, config.defaultCardCost);
+  const purchase: PurchaseOutcome = purchaseCard(
+    economy,
+    cardState,
+    card,
+    config.defaultCardCost,
+    undefined,
+    telemetry,
+    context
+  );
   if (!purchase.success || !purchase.economy || !purchase.cards) {
     return { success: false, error: purchase.error };
   }

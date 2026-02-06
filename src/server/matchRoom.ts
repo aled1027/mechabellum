@@ -5,6 +5,8 @@ import { resolveCombatOutcome } from "../game/roundFlow.js";
 import type { SimEvent, SimInput, SimState } from "../sim/types.js";
 import { ServerAuthoritativeSim } from "./authoritative.js";
 import { ReplayRecorder, type ReplayPayload } from "../sim/replay.js";
+import type { TelemetrySink } from "../analytics/telemetry.js";
+import { buildCombatTelemetryEvent } from "../analytics/telemetry.js";
 
 export interface MatchRoomConfig {
   tickMs: number;
@@ -58,7 +60,8 @@ export class MatchRoom {
   constructor(
     private readonly data: DataBundle,
     private readonly baseSeed: number,
-    private readonly config: MatchRoomConfig = defaultMatchRoomConfig
+    private readonly config: MatchRoomConfig = defaultMatchRoomConfig,
+    private readonly telemetry?: TelemetrySink
   ) {
     this.roundFlow = new RoundPhaseState({
       planningMs: config.planningMs,
@@ -162,5 +165,10 @@ export class MatchRoom {
     };
     this.roundFlow.lockCombat();
     this.recorder.recordRound(input);
+    this.telemetry?.record(
+      buildCombatTelemetryEvent(input, state, events, this.combatSnapshot.outcome, this.data, {
+        round: this.round
+      })
+    );
   }
 }
