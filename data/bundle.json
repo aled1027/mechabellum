@@ -1,0 +1,80 @@
+{
+  "units": [
+    {
+      "id": "crawler",
+      "name": "Crawler",
+      "tier": 1,
+      "role": "Frontline",
+      "class": "squad",
+      "cost": 50,
+      "stats": {
+        "hp": 120,
+        "armor": 0,
+        "damage": 12,
+        "attackType": "kinetic",
+        "attackSpeed": 1.2,
+        "range": 1.0,
+        "projectileSpeed": 0,
+        "turnSpeed": 180,
+        "moveSpeed": 1.6,
+        "collisionSize": 0.8,
+        "targeting": "ground",
+        "squadSize": 12
+      },
+      "tags": ["swarm"]
+    },
+    {
+      "id": "mustang",
+      "name": "Mustang",
+      "tier": 1,
+      "role": "Skirmisher",
+      "class": "squad",
+      "cost": 80,
+      "stats": {
+        "hp": 180,
+        "armor": 2,
+        "damage": 18,
+        "attackType": "kinetic",
+        "attackSpeed": 0.9,
+        "range": 3.5,
+        "projectileSpeed": 6,
+        "turnSpeed": 200,
+        "moveSpeed": 2.0,
+        "collisionSize": 1.0,
+        "targeting": "both",
+        "squadSize": 8
+      },
+      "tags": ["skirmish"]
+    }
+  ],
+  "techs": [
+    {
+      "id": "armor_plating",
+      "name": "Armor Plating",
+      "description": "+15 armor",
+      "maxLevel": 1,
+      "modifiers": {
+        "armor": 15
+      }
+    }
+  ],
+  "cards": [
+    {
+      "id": "supply_drop",
+      "name": "Supply Drop",
+      "rarity": "common",
+      "description": "Gain 20 credits",
+      "effects": {
+        "credits": 20
+      }
+    }
+  ],
+  "specialists": [
+    {
+      "id": "vanguard",
+      "name": "Vanguard",
+      "description": "Frontline units gain +10% HP",
+      "triggers": ["round_start"]
+    }
+  ]
+}
