@@ -15,6 +15,7 @@ describe("localization", () => {
     const unitName = localization.t("unit.crawler.name");
     expect(unitName).toBe("Crawler");
     expect(localization.t("ui.shop.title")).toBe("Shop");
+    expect(localization.t("ui.replay.title")).toBe("Replay");
   });
 
   it("falls back to the key when missing", () => {

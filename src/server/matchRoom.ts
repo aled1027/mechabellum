@@ -246,7 +246,7 @@ export class MatchRoom {
       outcome: resolveCombatOutcome(state, this.data)
     };
     this.roundFlow.lockCombat();
-    this.recorder.recordRound(input);
+    this.recorder.recordRound(input, state.tick);
     this.telemetry?.record(
       buildCombatTelemetryEvent(input, state, events, this.combatSnapshot.outcome, this.data, {
         round: this.round

@@ -25,7 +25,9 @@ const defaultUiEntries: Record<string, string> = {
   "ui.specialists": "Specialists",
   "ui.cards": "Reinforcements",
   "ui.credits": "Credits",
-  "ui.supply": "Supply"
+  "ui.supply": "Supply",
+  "ui.replay.title": "Replay",
+  "ui.replay.speed": "Speed"
 };
 
 export class LocalizationManager {

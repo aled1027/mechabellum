@@ -6,6 +6,7 @@ import { computeRoundSeed } from "../core/rng.js";
 export interface ReplayRound {
   round: number;
   seed: number;
+  ticks: number;
   input: SimInput;
 }
 
@@ -30,6 +31,16 @@ export const defaultReplayConfig: ReplayConfig = {
   maxTicks: 1800
 };
 
+export const REPLAY_SPEED_MIN = 0.25;
+export const REPLAY_SPEED_MAX = 2;
+export const REPLAY_SPEED_OPTIONS = [0.25, 0.5, 1, 1.5, 2] as const;
+
+const assertReplaySpeed = (speed: number): void => {
+  if (speed < REPLAY_SPEED_MIN || speed > REPLAY_SPEED_MAX) {
+    throw new Error(`speed must be between ${REPLAY_SPEED_MIN} and ${REPLAY_SPEED_MAX}`);
+  }
+};
+
 export class ReplayRecorder {
   private readonly rounds: ReplayRound[] = [];
 
@@ -38,10 +49,14 @@ export class ReplayRecorder {
     private readonly version: string = "1"
   ) {}
 
-  recordRound(input: SimInput): void {
+  recordRound(input: SimInput, ticks: number): void {
+    if (!Number.isInteger(ticks) || ticks < 0) {
+      throw new Error("ticks must be a non-negative integer");
+    }
     this.rounds.push({
       round: input.round,
       seed: computeRoundSeed(this.baseSeed, input.round),
+      ticks,
       input
     });
   }
@@ -116,9 +131,7 @@ export class ReplayTimeline {
   }
 
   setSpeed(speed: number): void {
-    if (speed <= 0) {
-      throw new Error("speed must be > 0");
-    }
+    assertReplaySpeed(speed);
     this.speed = speed;
   }
 

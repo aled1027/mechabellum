@@ -9,6 +9,7 @@ export * from "./server/authoritative.js";
 export * from "./server/matchRoom.js";
 export * from "./client/interpolation.js";
 export * from "./client/planningHud.js";
+export * from "./client/replayHud.js";
 export * from "./client/accessibility.js";
 export * from "./client/localization.js";
 export * from "./analytics/telemetry.js";

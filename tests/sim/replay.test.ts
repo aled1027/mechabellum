@@ -13,11 +13,12 @@ const placements = [
 describe("Replay system", () => {
   it("records round inputs with deterministic seeds", async () => {
     const recorder = new ReplayRecorder(1337, "1");
-    recorder.recordRound({ round: 1, placements });
+    recorder.recordRound({ round: 1, placements }, 3);
 
     const payload = recorder.buildPayload();
     expect(payload.rounds).toHaveLength(1);
     expect(payload.rounds[0].seed).toBe(computeRoundSeed(1337, 1));
+    expect(payload.rounds[0].ticks).toBe(3);
   });
 
   it("replays a round deterministically", async () => {
@@ -25,7 +26,7 @@ describe("Replay system", () => {
     const bundle = await loadBundleWithOverrides(dataDir);
 
     const recorder = new ReplayRecorder(1337, "1");
-    recorder.recordRound({ round: 1, placements });
+    recorder.recordRound({ round: 1, placements }, 3);
 
     const payload = recorder.buildPayload();
     const replay = new ReplayPlayer(bundle, payload, { tickMs: 50, maxTicks: 3 });
