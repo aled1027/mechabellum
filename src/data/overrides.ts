@@ -1,4 +1,10 @@
-import type { DataBundle, UnitDefinition, TechDefinition, CardDefinition, SpecialistDefinition } from "./schemas.js";
+import type {
+  DataBundle,
+  UnitDefinition,
+  TechDefinition,
+  CardDefinition,
+  SpecialistDefinition
+} from "./schemas.js";
 
 export type OverridePatch<T> = Partial<T> & { id: string };
 
@@ -26,7 +32,10 @@ const applyListOverrides = <T extends { id: string }>(
   return Array.from(map.values());
 };
 
-export const applyBalanceOverrides = (bundle: DataBundle, overrides: BalanceOverrides): DataBundle => {
+export const applyBalanceOverrides = (
+  bundle: DataBundle,
+  overrides: BalanceOverrides
+): DataBundle => {
   return {
     units: applyListOverrides(bundle.units, overrides.units),
     techs: applyListOverrides(bundle.techs, overrides.techs),

@@ -7,7 +7,9 @@ import type { SimState, SimEvent } from "./types.js";
 const stableState = (state: SimState): SimState => {
   return {
     tick: state.tick,
-    units: [...state.units].sort((a, b) => a.id.localeCompare(b.id))
+    units: [...state.units].sort((a, b) => a.id.localeCompare(b.id)),
+    projectiles: [...state.projectiles].sort((a, b) => a.id.localeCompare(b.id)),
+    wreckage: [...state.wreckage].sort((a, b) => a.id.localeCompare(b.id))
   };
 };
 

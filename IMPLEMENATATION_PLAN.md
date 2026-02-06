@@ -7,6 +7,7 @@ This plan translates the internal GDD into an actionable delivery roadmap. It fo
 ## 1. Delivery Phases & Milestones
 
 ### Phase 0 — Foundations (Weeks 0–2)
+
 **Goal:** Establish the technical backbone for deterministic combat and data-driven content.
 
 - **Core Engine Setup**
@@ -30,6 +31,7 @@ This plan translates the internal GDD into an actionable delivery roadmap. It fo
 ---
 
 ### Phase 1 — Combat Core (Weeks 3–6)
+
 **Goal:** Implement complete combat simulation with movement, targeting, projectiles, and status effects.
 
 - **Unit Stat Framework** (GDD §3.1)
@@ -41,7 +43,7 @@ This plan translates the internal GDD into an actionable delivery roadmap. It fo
   - Priority class collision and fallback behavior.
 
 - **Movement & Pathing** (GDD §16)
-  - A* on grid; collision avoidance by class.
+  - A\* on grid; collision avoidance by class.
   - Wreckage as temporary obstacles. (GDD §4.4)
 
 - **Weapon & Damage Resolution** (GDD §4.2, §21.2)
@@ -59,6 +61,7 @@ This plan translates the internal GDD into an actionable delivery roadmap. It fo
 ---
 
 ### Phase 2 — Economy, Shop, and Progression Loop (Weeks 7–9)
+
 **Goal:** Implement the planning phase systems and full loop from round to round.
 
 - **Economy System** (GDD §11)
@@ -81,6 +84,7 @@ This plan translates the internal GDD into an actionable delivery roadmap. It fo
 ---
 
 ### Phase 3 — Specialists, Cards, and Advanced Systems (Weeks 10–13)
+
 **Goal:** Add strategic layers (specialists and reinforcement cards) and complete combat interactions.
 
 - **Specialist System** (GDD §5, §14)
@@ -100,6 +104,7 @@ This plan translates the internal GDD into an actionable delivery roadmap. It fo
 ---
 
 ### Phase 4 — Content Rollout & Balance Pass (Weeks 14–18)
+
 **Goal:** Populate full unit roster and perform balance tuning with telemetry.
 
 - **Unit Roster Integration** (GDD §3)
@@ -119,6 +124,7 @@ This plan translates the internal GDD into an actionable delivery roadmap. It fo
 ---
 
 ### Phase 5 — UI/UX, Replay, and Networking Harden (Weeks 19–22)
+
 **Goal:** Finalize player-facing experience and harden networked determinism.
 
 - **HUD & Planning UI** (GDD §17, §27)
@@ -137,6 +143,7 @@ This plan translates the internal GDD into an actionable delivery roadmap. It fo
 ---
 
 ### Phase 6 — QA, Analytics, and Release Prep (Weeks 23–26)
+
 **Goal:** Ensure stability, measurable telemetry, and shipping readiness.
 
 - **QA & Test Plan** (GDD §32)
@@ -156,6 +163,7 @@ This plan translates the internal GDD into an actionable delivery roadmap. It fo
 ## 2. System-by-System Implementation Detail
 
 ### 2.1 Combat Simulation
+
 - **Simulation Loop**
   - Fixed tick (50ms).
   - Update order: triggers → movement/rotation → targeting → firing → impacts → status/deaths. (GDD §21.2)
@@ -168,21 +176,25 @@ This plan translates the internal GDD into an actionable delivery roadmap. It fo
   - Compare total HP%, then unit value for tiebreak. (GDD §10.3, §21.4)
 
 ### 2.2 Targeting & AI
-- **Target score** = (distance * 0.5) + (HP% * 0.3) + (threat * 0.2).
+
+- **Target score** = (distance _ 0.5) + (HP% _ 0.3) + (threat \* 0.2).
 - **Retarget cooldown** default 1.5s, modified by techs.
 - **Fallback** after 3s blocked -> retarget nearest open tile.
 
 ### 2.3 Damage Model
+
 - Damage pipeline: hit check → armor → shields → HP → on-hit effects.
 - Damage type modifiers (kinetic, explosive, energy, flame, EMP).
 - Status effects apply after hit; burn reduces armor by 20%.
 
 ### 2.4 Economy & Shop
+
 - Income formula + supply scaling.
 - Shop offers generated via weighted tables.
 - Rerolls tracked with per-round cap.
 
 ### 2.5 Content Pipeline
+
 - JSON/YAML tables for all unit stats, techs, cards, specialists.
 - Versioned schema migrations.
 - Server-side hotfix overrides.
@@ -192,6 +204,7 @@ This plan translates the internal GDD into an actionable delivery roadmap. It fo
 ## 3. Backend Implementation (Cloudflare-First)
 
 ### 3.1 Architecture
+
 - **Cloudflare Workers** for API, auth hooks, and matchmaking entrypoints.
 - **Durable Objects** as authoritative match rooms (lockstep input queue, RNG seed, combat stream coordination).
 - **WebSockets** from clients to Durable Objects for real-time inputs and state updates.
@@ -200,6 +213,7 @@ This plan translates the internal GDD into an actionable delivery roadmap. It fo
 - **KV** for balance overrides, feature flags, and configuration snapshots.
 
 ### 3.2 Match Flow
+
 1. Client requests match via Worker (queues by mode/region).
 2. Worker assigns/creates a Durable Object room.
 3. Clients connect via WebSocket to the room.
@@ -208,11 +222,13 @@ This plan translates the internal GDD into an actionable delivery roadmap. It fo
 6. Room writes replay metadata to D1 and payloads to R2.
 
 ### 3.3 Persistence & Data
+
 - **D1 Tables**: users, ratings, matches, match_participants, replays.
 - **Replay payloads** stored as compressed JSON in R2.
 - **Balance overrides** pulled from KV with versioning; cached in DO.
 
 ### 3.4 Security & Reliability
+
 - Validate placement bounds, credit costs, and turn timers server-side.
 - Use id-based deterministic ordering for inputs.
 - Include build/version hash in replay payload for compatibility.
@@ -221,13 +237,13 @@ This plan translates the internal GDD into an actionable delivery roadmap. It fo
 
 ## 4. Risks & Mitigations
 
-| Risk | Impact | Mitigation |
-|------|--------|-----------|
+| Risk                                    | Impact                  | Mitigation                                                                  |
+| --------------------------------------- | ----------------------- | --------------------------------------------------------------------------- |
 | Determinism drift between server/client | Desync, replay mismatch | Strict fixed-step sim, deterministic iteration order, replay checksum tests |
-| Balance volatility | Meta instability | Phased balance plan, high-MMR testing, server hotfix overrides |
-| Content scale | Slow delivery | Data-driven design, prefab manifest pipeline |
-| Network latency | Input delays | Phase locks, local UI prediction only |
-| Durable Object scaling limits | Queue delays | Shard by mode/region, keep rooms ephemeral |
+| Balance volatility                      | Meta instability        | Phased balance plan, high-MMR testing, server hotfix overrides              |
+| Content scale                           | Slow delivery           | Data-driven design, prefab manifest pipeline                                |
+| Network latency                         | Input delays            | Phase locks, local UI prediction only                                       |
+| Durable Object scaling limits           | Queue delays            | Shard by mode/region, keep rooms ephemeral                                  |
 
 ---
 

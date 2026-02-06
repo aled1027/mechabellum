@@ -3,10 +3,18 @@ import { z } from "zod";
 export const AttackTypeSchema = z.enum(["kinetic", "explosive", "energy", "flame", "emp"]);
 export const TargetingFlagsSchema = z.enum(["ground", "air", "both"]);
 export const UnitClassSchema = z.enum(["squad", "giant", "air"]);
+export const StatusEffectTypeSchema = z.enum(["emp", "stun", "burn", "slow", "mark"]);
+
+export const OnHitEffectSchema = z.object({
+  type: StatusEffectTypeSchema,
+  duration: z.number().positive(),
+  magnitude: z.number().default(1)
+});
 
 export const UnitStatsSchema = z.object({
   hp: z.number().positive(),
   armor: z.number().nonnegative().default(0),
+  shield: z.number().nonnegative().default(0),
   damage: z.number().nonnegative(),
   attackType: AttackTypeSchema,
   attackSpeed: z.number().positive(),
@@ -16,7 +24,12 @@ export const UnitStatsSchema = z.object({
   moveSpeed: z.number().nonnegative(),
   collisionSize: z.number().positive(),
   targeting: TargetingFlagsSchema.default("ground"),
-  squadSize: z.number().int().positive().default(1)
+  squadSize: z.number().int().positive().default(1),
+  accuracy: z.number().min(0).max(1).default(1),
+  aoeRadius: z.number().nonnegative().default(0),
+  homing: z.boolean().default(false),
+  resistances: z.record(AttackTypeSchema, z.number()).default({}),
+  onHitEffects: z.array(OnHitEffectSchema).default([])
 });
 
 export const UnitSchema = z.object({
@@ -60,6 +73,10 @@ export const DataBundleSchema = z.object({
   specialists: z.array(SpecialistSchema)
 });
 
+export type AttackType = z.infer<typeof AttackTypeSchema>;
+export type TargetingFlags = z.infer<typeof TargetingFlagsSchema>;
+export type UnitClass = z.infer<typeof UnitClassSchema>;
+export type StatusEffectType = z.infer<typeof StatusEffectTypeSchema>;
 export type UnitDefinition = z.infer<typeof UnitSchema>;
 export type TechDefinition = z.infer<typeof TechSchema>;
 export type CardDefinition = z.infer<typeof CardSchema>;
