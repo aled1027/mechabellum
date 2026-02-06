@@ -41,7 +41,11 @@ export class ServerAuthoritativeSim {
   }
 
   run(): void {
-    this.loop.runTicks(this.config.maxTicks, (_, tick) => {
+    this.runTicks(this.config.maxTicks);
+  }
+
+  runTicks(ticks: number): void {
+    this.loop.runTicks(ticks, (_, tick) => {
       this.combat.step(tick);
     });
   }

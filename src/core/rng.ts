@@ -60,6 +60,10 @@ export class DeterministicRng implements RngStream {
   }
 }
 
+export const computeRoundSeed = (baseSeed: number, round: number): number => {
+  return (baseSeed ^ (round * 0x9e3779b9)) >>> 0;
+};
+
 export class RngService {
   private roundSeed: number;
   private readonly baseSeed: number;
@@ -70,7 +74,7 @@ export class RngService {
   }
 
   setRoundSeed(round: number): void {
-    this.roundSeed = (this.baseSeed ^ (round * 0x9e3779b9)) >>> 0;
+    this.roundSeed = computeRoundSeed(this.baseSeed, round);
   }
 
   stream(name: string): DeterministicRng {

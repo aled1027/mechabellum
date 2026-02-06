@@ -6,7 +6,9 @@ export * from "./data/overrides.js";
 export * from "./grid/grid.js";
 export * from "./grid/placement.js";
 export * from "./server/authoritative.js";
+export * from "./server/matchRoom.js";
 export * from "./client/interpolation.js";
+export * from "./client/planningHud.js";
 export {
   type StatusEffectType as SimStatusEffectType,
   type StatusEffectInstance,
@@ -18,6 +20,7 @@ export {
   type SimEvent,
   type SimInput
 } from "./sim/types.js";
+export * from "./sim/replay.js";
 export * from "./game/economy.js";
 export * from "./game/roster.js";
 export * from "./game/shop.js";

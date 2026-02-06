@@ -54,9 +54,7 @@ describe("unit behaviors", () => {
       makeUnit({
         id: "chain",
         stats: { damage: 10, range: 3 },
-        behaviors: [
-          { type: "chain_lightning", chainCount: 2, chainRange: 2.5, damageFalloff: 0.8 }
-        ]
+        behaviors: [{ type: "chain_lightning", chainCount: 2, chainRange: 2.5, damageFalloff: 0.8 }]
       }),
       makeUnit({ id: "target-a", stats: { hp: 20 } }),
       makeUnit({ id: "target-b", stats: { hp: 20 } }),
