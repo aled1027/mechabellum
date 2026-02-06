@@ -1,5 +1,8 @@
 import type { DataBundle } from "../data/schemas.js";
 import type { PlayerSide } from "../grid/grid.js";
+import { GridModel } from "../grid/grid.js";
+import type { PlacementLimits } from "../grid/placement.js";
+import { defaultLimits } from "../grid/placement.js";
 import { RoundPhaseState } from "../game/roundFlow.js";
 import { resolveCombatOutcome } from "../game/roundFlow.js";
 import type { SimEvent, SimInput, SimState } from "../sim/types.js";
@@ -14,6 +17,7 @@ export interface MatchRoomConfig {
   planningMs: number;
   combatMs: number;
   replayVersion: string;
+  placementLimits?: PlacementLimits;
 }
 
 export interface MatchPlayer {
@@ -53,6 +57,8 @@ export class MatchRoom {
   private readonly players: MatchPlayer[] = [];
   private readonly roundFlow: RoundPhaseState;
   private readonly recorder: ReplayRecorder;
+  private readonly placementLimits: PlacementLimits;
+  private readonly grid = new GridModel();
   private inputsBySide: Map<PlayerSide, SimInput["placements"]> = new Map();
   private round = 0;
   private combatSnapshot?: MatchCombatSnapshot;
@@ -68,6 +74,7 @@ export class MatchRoom {
       combatMs: config.combatMs
     });
     this.recorder = new ReplayRecorder(baseSeed, config.replayVersion);
+    this.placementLimits = config.placementLimits ?? defaultLimits;
   }
 
   addPlayer(player: MatchPlayer): void {
@@ -94,6 +101,10 @@ export class MatchRoom {
     }
     if (!this.roundFlow.canAcceptPlanningActions()) {
       return { success: false, error: "Planning phase locked" };
+    }
+    const validationError = this.validatePlacements(placements, player.side);
+    if (validationError) {
+      return { success: false, error: validationError };
     }
     const sanitized = placements.map((placement) => ({
       ...placement,
@@ -135,6 +146,77 @@ export class MatchRoom {
       throw new Error("Player not found");
     }
     return this.getSnapshot();
+  }
+
+  private validatePlacements(
+    placements: SimInput["placements"],
+    side: PlayerSide
+  ): string | undefined {
+    if (placements.length > this.placementLimits.maxPlacementsPerRound) {
+      return "Placement limit reached";
+    }
+
+    const classCounts: Record<"squad" | "giant" | "air", number> = {
+      squad: 0,
+      giant: 0,
+      air: 0
+    };
+    const occupiedTiles = new Set<string>();
+
+    for (const placement of placements) {
+      const unit = this.data.units.find((entry) => entry.id === placement.unitId);
+      if (!unit) {
+        return `Unknown unit ${placement.unitId}`;
+      }
+
+      const tileKey = `${placement.position.x},${placement.position.y}`;
+      if (occupiedTiles.has(tileKey)) {
+        return "Duplicate placement tile";
+      }
+      occupiedTiles.add(tileKey);
+
+      if (!this.grid.isInBounds(placement.position)) {
+        return "Position out of bounds";
+      }
+      if (!this.grid.ownsTile(side, placement.position)) {
+        return "Tile not owned by player";
+      }
+      if (![0, 90, 180, 270].includes(placement.orientation)) {
+        return "Invalid orientation";
+      }
+      if (placement.level !== undefined) {
+        if (!Number.isInteger(placement.level) || placement.level < 0 || placement.level > 3) {
+          return "Invalid unit level";
+        }
+      }
+      if (placement.techs) {
+        if (placement.techs.length > 2) {
+          return "Too many techs selected";
+        }
+        const techSet = new Set(placement.techs);
+        if (techSet.size !== placement.techs.length) {
+          return "Duplicate tech selection";
+        }
+        for (const techId of placement.techs) {
+          if (!this.data.techs.some((tech) => tech.id === techId)) {
+            return `Unknown tech ${techId}`;
+          }
+        }
+      }
+
+      classCounts[unit.class] += 1;
+      if (unit.class === "squad" && classCounts.squad > this.placementLimits.maxSquads) {
+        return "Squad cap reached";
+      }
+      if (unit.class === "giant" && classCounts.giant > this.placementLimits.maxGiants) {
+        return "Giant cap reached";
+      }
+      if (unit.class === "air" && classCounts.air > this.placementLimits.maxAirSquads) {
+        return "Air squad cap reached";
+      }
+    }
+
+    return undefined;
   }
 
   private maybeResolveCombat(force: boolean = false): void {

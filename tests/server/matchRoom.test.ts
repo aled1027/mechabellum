@@ -33,6 +33,28 @@ describe("MatchRoom", () => {
     expect(snapshot.replay?.rounds).toHaveLength(1);
   });
 
+  it("rejects invalid planning inputs", async () => {
+    const dataDir = path.join(process.cwd(), "data");
+    const bundle = await loadBundleWithOverrides(dataDir);
+
+    const room = new MatchRoom(bundle, 1337, {
+      tickMs: 50,
+      maxTicks: 3,
+      planningMs: 1000,
+      combatMs: 1000,
+      replayVersion: "1"
+    });
+    room.addPlayer({ id: "north-player", side: "north" });
+    room.startRound(1);
+
+    const result = room.submitPlanningInput("north-player", [
+      { unitId: "crawler", side: "north", position: { x: 20, y: 1 }, orientation: 0 }
+    ]);
+
+    expect(result.success).toBe(false);
+    expect(result.error).toBe("Position out of bounds");
+  });
+
   it("returns a snapshot on reconnect", async () => {
     const dataDir = path.join(process.cwd(), "data");
     const bundle = await loadBundleWithOverrides(dataDir);
