@@ -33,6 +33,7 @@ const makeUnit = (overrides: Partial<UnitDefinition> & { id: string }): UnitDefi
       onHitEffects: [],
       ...statsOverrides
     },
+    behaviors: [],
     tags: [],
     ...rest
   };

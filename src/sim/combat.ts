@@ -15,6 +15,7 @@ import {
   hasStatus,
   tickStatusEffects
 } from "./status.js";
+import { applyChainLightning, getReviveBehavior, isTargetable } from "./behaviors.js";
 import { updateProjectiles } from "./projectiles.js";
 
 export interface CombatConfig {
@@ -160,6 +161,9 @@ export class CombatSimulator {
           magnitude: effect.magnitude
         }))
       },
+      behaviors: definition.behaviors ?? [],
+      reviveCharges:
+        definition.behaviors?.find((behavior) => behavior.type === "revive")?.reviveCharges ?? 0,
       attackCooldown: 0,
       retargetCooldown: 0,
       blockedTicks: 0,
@@ -263,7 +267,8 @@ export class CombatSimulator {
         continue;
       }
       const candidates = this.state.units.filter(
-        (candidate) => candidate.side !== unit.side && candidate.hp > 0
+        (candidate) =>
+          candidate.side !== unit.side && candidate.hp > 0 && isTargetable(unit, candidate)
       );
       const chosen = candidates.length ? selectTarget(unit, candidates) : undefined;
       unit.targetId = chosen?.id;
@@ -345,6 +350,7 @@ export class CombatSimulator {
         for (const effect of unit.stats.onHitEffects) {
           addStatusEffect(target, effect, unit.id, this.events, tick);
         }
+        applyChainLightning(unit, target, this.state.units, this.events, tick);
       }
 
       unit.attackCooldown = Math.max(1, Math.round(this.tps / unit.stats.attackSpeed));
@@ -369,6 +375,22 @@ export class CombatSimulator {
         survivors.push(unit);
         continue;
       }
+
+      const revive = getReviveBehavior(unit);
+      if (revive && unit.reviveCharges > 0) {
+        unit.reviveCharges -= 1;
+        unit.hp = Math.max(1, Math.round(unit.stats.maxHp * revive.reviveHpPercent));
+        unit.shield = unit.stats.maxShield;
+        unit.statusEffects = [];
+        this.events.push({
+          tick,
+          type: "revive",
+          payload: { unitId: unit.id, hp: unit.hp, remainingCharges: unit.reviveCharges }
+        });
+        survivors.push(unit);
+        continue;
+      }
+
       this.events.push({ tick, type: "death", payload: { unitId: unit.id } });
       this.state.wreckage.push({
         id: `wreck-${unit.id}-${tick}`,

@@ -13,7 +13,7 @@
         "damage": 12,
         "attackType": "kinetic",
         "attackSpeed": 1.2,
-        "range": 1.0,
+        "range": 1,
         "projectileSpeed": 0,
         "turnSpeed": 180,
         "moveSpeed": 1.6,
@@ -21,7 +21,30 @@
         "targeting": "ground",
         "squadSize": 12
       },
-      "tags": ["swarm"]
+      "tags": ["swarm", "frontline"]
+    },
+    {
+      "id": "fang",
+      "name": "Fang",
+      "tier": 1,
+      "role": "Disruptor",
+      "class": "squad",
+      "cost": 70,
+      "stats": {
+        "hp": 160,
+        "armor": 1,
+        "damage": 24,
+        "attackType": "kinetic",
+        "attackSpeed": 1.1,
+        "range": 1.2,
+        "projectileSpeed": 0,
+        "turnSpeed": 200,
+        "moveSpeed": 2,
+        "collisionSize": 0.9,
+        "targeting": "ground",
+        "squadSize": 6
+      },
+      "tags": ["disruptor"]
     },
     {
       "id": "mustang",
@@ -39,24 +62,1080 @@
         "range": 3.5,
         "projectileSpeed": 6,
         "turnSpeed": 200,
-        "moveSpeed": 2.0,
-        "collisionSize": 1.0,
+        "moveSpeed": 2,
+        "collisionSize": 1,
         "targeting": "both",
         "squadSize": 8
       },
       "tags": ["skirmish"]
+    },
+    {
+      "id": "arclight",
+      "name": "Arclight",
+      "tier": 2,
+      "role": "Chain Control",
+      "class": "squad",
+      "cost": 140,
+      "stats": {
+        "hp": 320,
+        "armor": 2,
+        "damage": 30,
+        "attackType": "energy",
+        "attackSpeed": 0.9,
+        "range": 3,
+        "projectileSpeed": 6,
+        "turnSpeed": 160,
+        "moveSpeed": 1.4,
+        "collisionSize": 1.2,
+        "targeting": "both",
+        "squadSize": 4
+      },
+      "behaviors": [
+        {
+          "type": "chain_lightning",
+          "chainCount": 3,
+          "chainRange": 2.5,
+          "damageFalloff": 0.7
+        }
+      ],
+      "tags": ["anti-swarm"]
+    },
+    {
+      "id": "marksman",
+      "name": "Marksman",
+      "tier": 2,
+      "role": "Precision Sniper",
+      "class": "squad",
+      "cost": 150,
+      "stats": {
+        "hp": 240,
+        "armor": 1,
+        "damage": 60,
+        "attackType": "kinetic",
+        "attackSpeed": 0.6,
+        "range": 6,
+        "projectileSpeed": 8,
+        "turnSpeed": 150,
+        "moveSpeed": 1.2,
+        "collisionSize": 1,
+        "targeting": "both",
+        "squadSize": 3
+      },
+      "tags": ["sniper", "anti-giant"]
+    },
+    {
+      "id": "sledgehammer",
+      "name": "Sledgehammer",
+      "tier": 2,
+      "role": "Artillery",
+      "class": "squad",
+      "cost": 170,
+      "stats": {
+        "hp": 360,
+        "armor": 2,
+        "damage": 40,
+        "attackType": "explosive",
+        "attackSpeed": 0.7,
+        "range": 5,
+        "projectileSpeed": 5,
+        "turnSpeed": 120,
+        "moveSpeed": 1,
+        "collisionSize": 1.4,
+        "targeting": "ground",
+        "squadSize": 2,
+        "aoeRadius": 1.6
+      },
+      "tags": ["artillery"]
+    },
+    {
+      "id": "steel_ball",
+      "name": "Steel Ball",
+      "tier": 2,
+      "role": "Disruptor Tank",
+      "class": "squad",
+      "cost": 160,
+      "stats": {
+        "hp": 520,
+        "armor": 4,
+        "damage": 20,
+        "attackType": "kinetic",
+        "attackSpeed": 0.8,
+        "range": 1.5,
+        "projectileSpeed": 0,
+        "turnSpeed": 120,
+        "moveSpeed": 1.8,
+        "collisionSize": 1.6,
+        "targeting": "ground",
+        "squadSize": 3
+      },
+      "tags": ["tank", "disruptor"]
+    },
+    {
+      "id": "stormcaller",
+      "name": "Stormcaller",
+      "tier": 2,
+      "role": "Rocket Battery",
+      "class": "squad",
+      "cost": 180,
+      "stats": {
+        "hp": 280,
+        "armor": 1,
+        "damage": 35,
+        "attackType": "explosive",
+        "attackSpeed": 0.5,
+        "range": 7,
+        "projectileSpeed": 6,
+        "turnSpeed": 120,
+        "moveSpeed": 1.1,
+        "collisionSize": 1.2,
+        "targeting": "ground",
+        "squadSize": 3,
+        "aoeRadius": 2
+      },
+      "tags": ["battery"]
+    },
+    {
+      "id": "hound",
+      "name": "Hound",
+      "tier": 2,
+      "role": "Mobile Harasser",
+      "class": "squad",
+      "cost": 150,
+      "stats": {
+        "hp": 260,
+        "armor": 1,
+        "damage": 28,
+        "attackType": "kinetic",
+        "attackSpeed": 1,
+        "range": 2.5,
+        "projectileSpeed": 4,
+        "turnSpeed": 200,
+        "moveSpeed": 2.4,
+        "collisionSize": 1,
+        "targeting": "ground",
+        "squadSize": 4
+      },
+      "tags": ["harasser"]
+    },
+    {
+      "id": "scorpion",
+      "name": "Scorpion",
+      "tier": 3,
+      "role": "Long-Range Execution",
+      "class": "squad",
+      "cost": 240,
+      "stats": {
+        "hp": 650,
+        "armor": 4,
+        "damage": 120,
+        "attackType": "explosive",
+        "attackSpeed": 0.4,
+        "range": 8,
+        "projectileSpeed": 9,
+        "turnSpeed": 90,
+        "moveSpeed": 0.8,
+        "collisionSize": 1.8,
+        "targeting": "ground",
+        "squadSize": 2
+      },
+      "tags": ["artillery"]
+    },
+    {
+      "id": "vulcan",
+      "name": "Vulcan",
+      "tier": 3,
+      "role": "Anti-Swarm Anchor",
+      "class": "squad",
+      "cost": 230,
+      "stats": {
+        "hp": 800,
+        "armor": 6,
+        "damage": 20,
+        "attackType": "flame",
+        "attackSpeed": 2.5,
+        "range": 4,
+        "projectileSpeed": 6,
+        "turnSpeed": 120,
+        "moveSpeed": 0.7,
+        "collisionSize": 2,
+        "targeting": "ground",
+        "squadSize": 2,
+        "aoeRadius": 0.8
+      },
+      "tags": ["anti-swarm"]
+    },
+    {
+      "id": "rhino",
+      "name": "Rhino",
+      "tier": 3,
+      "role": "Siege Breaker",
+      "class": "squad",
+      "cost": 260,
+      "stats": {
+        "hp": 900,
+        "armor": 6,
+        "damage": 90,
+        "attackType": "kinetic",
+        "attackSpeed": 0.6,
+        "range": 2,
+        "projectileSpeed": 0,
+        "turnSpeed": 90,
+        "moveSpeed": 1,
+        "collisionSize": 2.2,
+        "targeting": "ground",
+        "squadSize": 2
+      },
+      "tags": ["siege"]
+    },
+    {
+      "id": "hacker",
+      "name": "Hacker",
+      "tier": 3,
+      "role": "Tech Disruption",
+      "class": "squad",
+      "cost": 220,
+      "stats": {
+        "hp": 550,
+        "armor": 3,
+        "damage": 25,
+        "attackType": "emp",
+        "attackSpeed": 1.2,
+        "range": 4,
+        "projectileSpeed": 5,
+        "turnSpeed": 120,
+        "moveSpeed": 1.2,
+        "collisionSize": 1.6,
+        "targeting": "both",
+        "squadSize": 2
+      },
+      "tags": ["disruptor", "emp"]
+    },
+    {
+      "id": "tarantula",
+      "name": "Tarantula",
+      "tier": 3,
+      "role": "Zone Control",
+      "class": "squad",
+      "cost": 230,
+      "stats": {
+        "hp": 700,
+        "armor": 4,
+        "damage": 35,
+        "attackType": "energy",
+        "attackSpeed": 0.8,
+        "range": 3,
+        "projectileSpeed": 4,
+        "turnSpeed": 80,
+        "moveSpeed": 0.6,
+        "collisionSize": 2,
+        "targeting": "ground",
+        "squadSize": 2,
+        "aoeRadius": 1
+      },
+      "tags": ["zone-control"]
+    },
+    {
+      "id": "fortress",
+      "name": "Fortress",
+      "tier": 3,
+      "role": "Battlefield Anchor",
+      "class": "giant",
+      "cost": 500,
+      "stats": {
+        "hp": 2000,
+        "armor": 10,
+        "damage": 80,
+        "attackType": "explosive",
+        "attackSpeed": 0.4,
+        "range": 6,
+        "projectileSpeed": 5,
+        "turnSpeed": 40,
+        "moveSpeed": 0.4,
+        "collisionSize": 3,
+        "targeting": "ground",
+        "squadSize": 1,
+        "aoeRadius": 1.5
+      },
+      "tags": ["giant"]
+    },
+    {
+      "id": "melting_point",
+      "name": "Melting Point",
+      "tier": 3,
+      "role": "Beam Executioner",
+      "class": "giant",
+      "cost": 520,
+      "stats": {
+        "hp": 1400,
+        "armor": 6,
+        "damage": 200,
+        "attackType": "energy",
+        "attackSpeed": 0.3,
+        "range": 5,
+        "projectileSpeed": 0,
+        "turnSpeed": 40,
+        "moveSpeed": 0.5,
+        "collisionSize": 3,
+        "targeting": "ground",
+        "squadSize": 1
+      },
+      "tags": ["giant"]
+    },
+    {
+      "id": "sandworm",
+      "name": "Sandworm",
+      "tier": 3,
+      "role": "Ambush Disruptor",
+      "class": "giant",
+      "cost": 520,
+      "stats": {
+        "hp": 1600,
+        "armor": 8,
+        "damage": 100,
+        "attackType": "kinetic",
+        "attackSpeed": 0.5,
+        "range": 1.5,
+        "projectileSpeed": 0,
+        "turnSpeed": 50,
+        "moveSpeed": 1.2,
+        "collisionSize": 3.2,
+        "targeting": "ground",
+        "squadSize": 1
+      },
+      "tags": ["giant"]
+    },
+    {
+      "id": "raiden",
+      "name": "Raiden",
+      "tier": 3,
+      "role": "Alpha Strike",
+      "class": "giant",
+      "cost": 520,
+      "stats": {
+        "hp": 1300,
+        "armor": 5,
+        "damage": 180,
+        "attackType": "explosive",
+        "attackSpeed": 0.35,
+        "range": 5,
+        "projectileSpeed": 8,
+        "turnSpeed": 40,
+        "moveSpeed": 0.6,
+        "collisionSize": 3,
+        "targeting": "ground",
+        "squadSize": 1,
+        "aoeRadius": 1.4
+      },
+      "tags": ["giant"]
+    },
+    {
+      "id": "overlord",
+      "name": "Overlord",
+      "tier": 3,
+      "role": "Air Carrier",
+      "class": "giant",
+      "cost": 560,
+      "stats": {
+        "hp": 1500,
+        "armor": 7,
+        "damage": 60,
+        "attackType": "energy",
+        "attackSpeed": 0.9,
+        "range": 4,
+        "projectileSpeed": 6,
+        "turnSpeed": 40,
+        "moveSpeed": 0.6,
+        "collisionSize": 3,
+        "targeting": "both",
+        "squadSize": 1
+      },
+      "tags": ["giant", "carrier"]
+    },
+    {
+      "id": "war_factory",
+      "name": "War Factory",
+      "tier": 3,
+      "role": "Attrition Engine",
+      "class": "giant",
+      "cost": 600,
+      "stats": {
+        "hp": 2200,
+        "armor": 9,
+        "damage": 40,
+        "attackType": "kinetic",
+        "attackSpeed": 0.4,
+        "range": 5,
+        "projectileSpeed": 5,
+        "turnSpeed": 30,
+        "moveSpeed": 0.3,
+        "collisionSize": 3.4,
+        "targeting": "ground",
+        "squadSize": 1
+      },
+      "tags": ["giant"]
+    },
+    {
+      "id": "wasp",
+      "name": "Wasp",
+      "tier": 2,
+      "role": "Light Harassment",
+      "class": "air",
+      "cost": 120,
+      "stats": {
+        "hp": 180,
+        "armor": 0,
+        "damage": 20,
+        "attackType": "kinetic",
+        "attackSpeed": 1.4,
+        "range": 3,
+        "projectileSpeed": 6,
+        "turnSpeed": 220,
+        "moveSpeed": 2.4,
+        "collisionSize": 0.9,
+        "targeting": "both",
+        "squadSize": 5
+      },
+      "tags": ["air"]
+    },
+    {
+      "id": "phoenix",
+      "name": "Phoenix",
+      "tier": 3,
+      "role": "Revive Support",
+      "class": "air",
+      "cost": 180,
+      "stats": {
+        "hp": 300,
+        "armor": 1,
+        "damage": 30,
+        "attackType": "energy",
+        "attackSpeed": 0.9,
+        "range": 3.5,
+        "projectileSpeed": 6,
+        "turnSpeed": 220,
+        "moveSpeed": 2,
+        "collisionSize": 1.1,
+        "targeting": "both",
+        "squadSize": 3
+      },
+      "behaviors": [
+        {
+          "type": "revive",
+          "reviveHpPercent": 0.4,
+          "reviveCharges": 1
+        }
+      ],
+      "tags": ["air"]
+    },
+    {
+      "id": "phantom_ray",
+      "name": "Phantom Ray",
+      "tier": 3,
+      "role": "Cloaked Approach",
+      "class": "air",
+      "cost": 190,
+      "stats": {
+        "hp": 260,
+        "armor": 0,
+        "damage": 34,
+        "attackType": "energy",
+        "attackSpeed": 1,
+        "range": 4,
+        "projectileSpeed": 7,
+        "turnSpeed": 220,
+        "moveSpeed": 2.2,
+        "collisionSize": 1,
+        "targeting": "both",
+        "squadSize": 3
+      },
+      "behaviors": [
+        {
+          "type": "cloak",
+          "revealRange": 2.5
+        }
+      ],
+      "tags": ["air", "stealth"]
+    },
+    {
+      "id": "wraith",
+      "name": "Wraith",
+      "tier": 3,
+      "role": "Apex Air Control",
+      "class": "air",
+      "cost": 210,
+      "stats": {
+        "hp": 420,
+        "armor": 2,
+        "damage": 55,
+        "attackType": "energy",
+        "attackSpeed": 0.8,
+        "range": 4.5,
+        "projectileSpeed": 7,
+        "turnSpeed": 200,
+        "moveSpeed": 2,
+        "collisionSize": 1.3,
+        "targeting": "both",
+        "squadSize": 2
+      },
+      "tags": ["air"]
+    },
+    {
+      "id": "sabertooth",
+      "name": "Sabertooth",
+      "tier": 3,
+      "role": "Elite Sniper",
+      "class": "squad",
+      "cost": 210,
+      "stats": {
+        "hp": 380,
+        "armor": 2,
+        "damage": 90,
+        "attackType": "kinetic",
+        "attackSpeed": 0.6,
+        "range": 6,
+        "projectileSpeed": 7,
+        "turnSpeed": 160,
+        "moveSpeed": 1.1,
+        "collisionSize": 1.2,
+        "targeting": "both",
+        "squadSize": 2
+      },
+      "tags": ["rare"]
+    },
+    {
+      "id": "typhoon",
+      "name": "Typhoon",
+      "tier": 3,
+      "role": "Massive AoE Air",
+      "class": "air",
+      "cost": 240,
+      "stats": {
+        "hp": 600,
+        "armor": 2,
+        "damage": 70,
+        "attackType": "explosive",
+        "attackSpeed": 0.7,
+        "range": 5,
+        "projectileSpeed": 6,
+        "turnSpeed": 160,
+        "moveSpeed": 1.6,
+        "collisionSize": 1.6,
+        "targeting": "both",
+        "squadSize": 2,
+        "aoeRadius": 2.5
+      },
+      "tags": ["rare", "air"]
+    },
+    {
+      "id": "fire_badger",
+      "name": "Fire Badger",
+      "tier": 3,
+      "role": "Hybrid Bruiser",
+      "class": "squad",
+      "cost": 200,
+      "stats": {
+        "hp": 500,
+        "armor": 3,
+        "damage": 60,
+        "attackType": "flame",
+        "attackSpeed": 0.9,
+        "range": 2.5,
+        "projectileSpeed": 0,
+        "turnSpeed": 130,
+        "moveSpeed": 1.4,
+        "collisionSize": 1.5,
+        "targeting": "ground",
+        "squadSize": 2,
+        "aoeRadius": 0.6
+      },
+      "tags": ["rare"]
+    },
+    {
+      "id": "farseer",
+      "name": "Farseer",
+      "tier": 3,
+      "role": "Vision Manipulation",
+      "class": "squad",
+      "cost": 190,
+      "stats": {
+        "hp": 320,
+        "armor": 1,
+        "damage": 40,
+        "attackType": "energy",
+        "attackSpeed": 0.8,
+        "range": 4.5,
+        "projectileSpeed": 6,
+        "turnSpeed": 150,
+        "moveSpeed": 1.4,
+        "collisionSize": 1.1,
+        "targeting": "both",
+        "squadSize": 2
+      },
+      "tags": ["rare"]
+    },
+    {
+      "id": "larva",
+      "name": "Larva",
+      "tier": 3,
+      "role": "Random Giant Evolution",
+      "class": "squad",
+      "cost": 180,
+      "stats": {
+        "hp": 450,
+        "armor": 2,
+        "damage": 35,
+        "attackType": "kinetic",
+        "attackSpeed": 1,
+        "range": 1.5,
+        "projectileSpeed": 0,
+        "turnSpeed": 150,
+        "moveSpeed": 1.6,
+        "collisionSize": 1.4,
+        "targeting": "ground",
+        "squadSize": 4
+      },
+      "tags": ["rare"]
     }
   ],
   "techs": [
     {
       "id": "armor_plating",
       "name": "Armor Plating",
-      "description": "+15 armor",
-      "branch": "defense",
+      "description": "+10 armor",
+      "branch": "crawler_defense",
       "cost": 30,
       "maxLevel": 1,
       "modifiers": {
-        "armor": 15
+        "armor": 10
+      }
+    },
+    {
+      "id": "self_replication",
+      "name": "Self-Replication",
+      "description": "+2 squad size",
+      "branch": "crawler_swarm",
+      "cost": 35,
+      "maxLevel": 1,
+      "modifiers": {
+        "squadSize": 2
+      }
+    },
+    {
+      "id": "emp_payload",
+      "name": "EMP Payload",
+      "description": "+4 damage",
+      "branch": "crawler_emp",
+      "cost": 35,
+      "maxLevel": 1,
+      "modifiers": {
+        "damage": 4
+      }
+    },
+    {
+      "id": "speed_overdrive",
+      "name": "Speed Overdrive",
+      "description": "+0.4 move speed",
+      "branch": "crawler_speed",
+      "cost": 35,
+      "maxLevel": 1,
+      "modifiers": {
+        "moveSpeed": 0.4
+      }
+    },
+    {
+      "id": "jump_jets",
+      "name": "Jump Jets",
+      "description": "+0.5 move speed",
+      "branch": "fang_mobility",
+      "cost": 40,
+      "maxLevel": 1,
+      "modifiers": {
+        "moveSpeed": 0.5
+      }
+    },
+    {
+      "id": "bleed_blades",
+      "name": "Bleed Blades",
+      "description": "+6 damage",
+      "branch": "fang_damage",
+      "cost": 40,
+      "maxLevel": 1,
+      "modifiers": {
+        "damage": 6
+      }
+    },
+    {
+      "id": "reactive_armor",
+      "name": "Reactive Armor",
+      "description": "+3 armor",
+      "branch": "fang_defense",
+      "cost": 40,
+      "maxLevel": 1,
+      "modifiers": {
+        "armor": 3
+      }
+    },
+    {
+      "id": "targeting_override",
+      "name": "Targeting Override",
+      "description": "+0.5 range",
+      "branch": "fang_targeting",
+      "cost": 40,
+      "maxLevel": 1,
+      "modifiers": {
+        "range": 0.5
+      }
+    },
+    {
+      "id": "armor_piercing_ammo",
+      "name": "Armor-Piercing Ammo",
+      "description": "+5 damage",
+      "branch": "mustang_damage",
+      "cost": 45,
+      "maxLevel": 1,
+      "modifiers": {
+        "damage": 5
+      }
+    },
+    {
+      "id": "afterburners",
+      "name": "Afterburners",
+      "description": "+0.4 move speed",
+      "branch": "mustang_mobility",
+      "cost": 45,
+      "maxLevel": 1,
+      "modifiers": {
+        "moveSpeed": 0.4
+      }
+    },
+    {
+      "id": "flak_rounds",
+      "name": "Flak Rounds",
+      "description": "+0.5 range",
+      "branch": "mustang_aa",
+      "cost": 45,
+      "maxLevel": 1,
+      "modifiers": {
+        "range": 0.5
+      }
+    },
+    {
+      "id": "target_sync",
+      "name": "Target Sync",
+      "description": "+0.1 accuracy",
+      "branch": "mustang_targeting",
+      "cost": 45,
+      "maxLevel": 1,
+      "modifiers": {
+        "accuracy": 0.1
+      }
+    },
+    {
+      "id": "extended_chains",
+      "name": "Extended Chains",
+      "description": "+4 damage",
+      "branch": "arclight_chains",
+      "cost": 55,
+      "maxLevel": 1,
+      "modifiers": {
+        "damage": 4
+      }
+    },
+    {
+      "id": "anti_air_capacitors",
+      "name": "Anti-Air Capacitors",
+      "description": "+0.5 range",
+      "branch": "arclight_aa",
+      "cost": 55,
+      "maxLevel": 1,
+      "modifiers": {
+        "range": 0.5
+      }
+    },
+    {
+      "id": "overcharge_mode",
+      "name": "Overcharge Mode",
+      "description": "+8 damage",
+      "branch": "arclight_damage",
+      "cost": 60,
+      "maxLevel": 1,
+      "modifiers": {
+        "damage": 8
+      }
+    },
+    {
+      "id": "emp_arc",
+      "name": "EMP Arc",
+      "description": "+0.1 attack speed",
+      "branch": "arclight_emp",
+      "cost": 60,
+      "maxLevel": 1,
+      "modifiers": {
+        "attackSpeed": 0.1
+      }
+    },
+    {
+      "id": "armor_piercing_rounds",
+      "name": "Armor-Piercing Rounds",
+      "description": "+12 damage",
+      "branch": "marksman_damage",
+      "cost": 60,
+      "maxLevel": 1,
+      "modifiers": {
+        "damage": 12
+      }
+    },
+    {
+      "id": "anti_air_optics",
+      "name": "Anti-Air Optics",
+      "description": "+1 range",
+      "branch": "marksman_aa",
+      "cost": 60,
+      "maxLevel": 1,
+      "modifiers": {
+        "range": 1
+      }
+    },
+    {
+      "id": "thermal_targeting",
+      "name": "Thermal Targeting",
+      "description": "+0.15 accuracy",
+      "branch": "marksman_targeting",
+      "cost": 60,
+      "maxLevel": 1,
+      "modifiers": {
+        "accuracy": 0.15
+      }
+    },
+    {
+      "id": "focus_fire_protocol",
+      "name": "Focus Fire Protocol",
+      "description": "+0.05 attack speed",
+      "branch": "marksman_focus",
+      "cost": 60,
+      "maxLevel": 1,
+      "modifiers": {
+        "attackSpeed": 0.05
+      }
+    },
+    {
+      "id": "cluster_warheads",
+      "name": "Cluster Warheads",
+      "description": "+0.8 AoE radius",
+      "branch": "sledgehammer_aoe",
+      "cost": 65,
+      "maxLevel": 1,
+      "modifiers": {
+        "aoeRadius": 0.8
+      }
+    },
+    {
+      "id": "homing_guidance",
+      "name": "Homing Guidance",
+      "description": "+1.5 projectile speed",
+      "branch": "sledgehammer_guidance",
+      "cost": 65,
+      "maxLevel": 1,
+      "modifiers": {
+        "projectileSpeed": 1.5
+      }
+    },
+    {
+      "id": "napalm_payload",
+      "name": "Napalm Payload",
+      "description": "+8 damage",
+      "branch": "sledgehammer_napalm",
+      "cost": 65,
+      "maxLevel": 1,
+      "modifiers": {
+        "damage": 8
+      }
+    },
+    {
+      "id": "rapid_reload",
+      "name": "Rapid Reload",
+      "description": "+0.1 attack speed",
+      "branch": "sledgehammer_reload",
+      "cost": 65,
+      "maxLevel": 1,
+      "modifiers": {
+        "attackSpeed": 0.1
+      }
+    },
+    {
+      "id": "magnetic_pull",
+      "name": "Magnetic Pull",
+      "description": "+0.3 move speed",
+      "branch": "steelball_mobility",
+      "cost": 50,
+      "maxLevel": 1,
+      "modifiers": {
+        "moveSpeed": 0.3
+      }
+    },
+    {
+      "id": "kinetic_discharge",
+      "name": "Kinetic Discharge",
+      "description": "+6 damage",
+      "branch": "steelball_damage",
+      "cost": 50,
+      "maxLevel": 1,
+      "modifiers": {
+        "damage": 6
+      }
+    },
+    {
+      "id": "saturation_barrage",
+      "name": "Saturation Barrage",
+      "description": "+0.08 attack speed",
+      "branch": "stormcaller_barrage",
+      "cost": 55,
+      "maxLevel": 1,
+      "modifiers": {
+        "attackSpeed": 0.08
+      }
+    },
+    {
+      "id": "smart_targeting",
+      "name": "Smart Targeting",
+      "description": "+0.1 accuracy",
+      "branch": "stormcaller_targeting",
+      "cost": 55,
+      "maxLevel": 1,
+      "modifiers": {
+        "accuracy": 0.1
+      }
+    },
+    {
+      "id": "incendiary_payloads",
+      "name": "Incendiary Payloads",
+      "description": "+6 damage",
+      "branch": "stormcaller_damage",
+      "cost": 55,
+      "maxLevel": 1,
+      "modifiers": {
+        "damage": 6
+      }
+    },
+    {
+      "id": "rapid_deployment",
+      "name": "Rapid Deployment",
+      "description": "+0.2 move speed",
+      "branch": "stormcaller_mobility",
+      "cost": 55,
+      "maxLevel": 1,
+      "modifiers": {
+        "moveSpeed": 0.2
+      }
+    },
+    {
+      "id": "pack_tactics",
+      "name": "Pack Tactics",
+      "description": "+0.1 attack speed",
+      "branch": "hound_pack",
+      "cost": 50,
+      "maxLevel": 1,
+      "modifiers": {
+        "attackSpeed": 0.1
+      }
+    },
+    {
+      "id": "armor_shred",
+      "name": "Armor Shred",
+      "description": "+8 damage",
+      "branch": "hound_damage",
+      "cost": 50,
+      "maxLevel": 1,
+      "modifiers": {
+        "damage": 8
+      }
+    },
+    {
+      "id": "stealth_start",
+      "name": "Stealth Start",
+      "description": "+0.3 move speed",
+      "branch": "hound_stealth",
+      "cost": 50,
+      "maxLevel": 1,
+      "modifiers": {
+        "moveSpeed": 0.3
+      }
+    },
+    {
+      "id": "siege_ram",
+      "name": "Siege Ram",
+      "description": "+20 damage",
+      "branch": "rhino_damage",
+      "cost": 75,
+      "maxLevel": 1,
+      "modifiers": {
+        "damage": 20
+      }
+    },
+    {
+      "id": "shockwave_stomp",
+      "name": "Shockwave Stomp",
+      "description": "+0.6 AoE radius",
+      "branch": "rhino_aoe",
+      "cost": 75,
+      "maxLevel": 1,
+      "modifiers": {
+        "aoeRadius": 0.6
+      }
+    },
+    {
+      "id": "armor_overload",
+      "name": "Armor Overload",
+      "description": "+4 armor",
+      "branch": "rhino_defense",
+      "cost": 75,
+      "maxLevel": 1,
+      "modifiers": {
+        "armor": 4
+      }
+    },
+    {
+      "id": "rhino_target_override",
+      "name": "Target Override",
+      "description": "+0.5 range",
+      "branch": "rhino_targeting",
+      "cost": 75,
+      "maxLevel": 1,
+      "modifiers": {
+        "range": 0.5
+      }
+    },
+    {
+      "id": "aa_turrets",
+      "name": "AA Turrets",
+      "description": "+0.5 range",
+      "branch": "tarantula_aa",
+      "cost": 70,
+      "maxLevel": 1,
+      "modifiers": {
+        "range": 0.5
+      }
+    },
+    {
+      "id": "emp_mines",
+      "name": "EMP Mines",
+      "description": "+5 damage",
+      "branch": "tarantula_emp",
+      "cost": 70,
+      "maxLevel": 1,
+      "modifiers": {
+        "damage": 5
+      }
+    },
+    {
+      "id": "auto_repair_drones",
+      "name": "Auto-Repair Drones",
+      "description": "+120 hp",
+      "branch": "tarantula_repair",
+      "cost": 70,
+      "maxLevel": 1,
+      "modifiers": {
+        "hp": 120
       }
     }
   ],
@@ -74,6 +1153,158 @@
         {
           "kind": "credits",
           "amount": 20
+        }
+      ]
+    },
+    {
+      "id": "supply_surplus",
+      "name": "Supply Surplus",
+      "rarity": "rare",
+      "description": "Gain 40 credits",
+      "type": "instant",
+      "cooldownGroup": "basic",
+      "cooldownRounds": 2,
+      "cost": 25,
+      "effects": [
+        {
+          "kind": "credits",
+          "amount": 40
+        }
+      ]
+    },
+    {
+      "id": "emergency_repairs",
+      "name": "Emergency Repairs",
+      "rarity": "common",
+      "description": "+50 hp to all squads for 8s",
+      "type": "timed",
+      "trigger": "combat_start",
+      "durationMs": 8000,
+      "cooldownGroup": "support",
+      "cooldownRounds": 2,
+      "cost": 20,
+      "effects": [
+        {
+          "kind": "unit-stat",
+          "stat": "hp",
+          "mode": "add",
+          "amount": 50
+        }
+      ]
+    },
+    {
+      "id": "overclock",
+      "name": "Overclock",
+      "rarity": "rare",
+      "description": "+15% attack speed for 6s",
+      "type": "timed",
+      "trigger": "combat_start",
+      "durationMs": 6000,
+      "cooldownGroup": "offense",
+      "cooldownRounds": 2,
+      "cost": 25,
+      "effects": [
+        {
+          "kind": "unit-stat",
+          "stat": "attackSpeed",
+          "mode": "mul",
+          "amount": 0.15
+        }
+      ]
+    },
+    {
+      "id": "shield_boost",
+      "name": "Shield Boost",
+      "rarity": "common",
+      "description": "+40 shields",
+      "type": "instant",
+      "cooldownGroup": "support",
+      "cooldownRounds": 1,
+      "cost": 18,
+      "effects": [
+        {
+          "kind": "unit-stat",
+          "stat": "shield",
+          "mode": "add",
+          "amount": 40
+        }
+      ]
+    },
+    {
+      "id": "rapid_deploy_card",
+      "name": "Rapid Deploy",
+      "rarity": "common",
+      "description": "+0.3 move speed for 6s",
+      "type": "timed",
+      "trigger": "combat_start",
+      "durationMs": 6000,
+      "cooldownGroup": "mobility",
+      "cooldownRounds": 1,
+      "cost": 18,
+      "effects": [
+        {
+          "kind": "unit-stat",
+          "stat": "moveSpeed",
+          "mode": "add",
+          "amount": 0.3
+        }
+      ]
+    },
+    {
+      "id": "targeting_uplink",
+      "name": "Targeting Uplink",
+      "rarity": "rare",
+      "description": "+0.1 accuracy for 8s",
+      "type": "timed",
+      "trigger": "combat_start",
+      "durationMs": 8000,
+      "cooldownGroup": "support",
+      "cooldownRounds": 2,
+      "cost": 22,
+      "effects": [
+        {
+          "kind": "unit-stat",
+          "stat": "accuracy",
+          "mode": "add",
+          "amount": 0.1
+        }
+      ]
+    },
+    {
+      "id": "armor_cache",
+      "name": "Armor Cache",
+      "rarity": "common",
+      "description": "+2 armor",
+      "type": "instant",
+      "cooldownGroup": "defense",
+      "cooldownRounds": 2,
+      "cost": 18,
+      "effects": [
+        {
+          "kind": "unit-stat",
+          "stat": "armor",
+          "mode": "add",
+          "amount": 2
+        }
+      ]
+    },
+    {
+      "id": "hazard_training",
+      "name": "Hazard Training",
+      "rarity": "epic",
+      "description": "+6 damage for 8s",
+      "type": "timed",
+      "trigger": "combat_start",
+      "durationMs": 8000,
+      "cooldownGroup": "offense",
+      "cooldownRounds": 3,
+      "cost": 30,
+      "effects": [
+        {
+          "kind": "unit-stat",
+          "stat": "damage",
+          "mode": "add",
+          "amount": 6
         }
       ]
     }

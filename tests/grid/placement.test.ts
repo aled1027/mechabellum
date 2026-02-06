@@ -35,6 +35,7 @@ const makeUnit = (overrides: Partial<UnitDefinition> = {}): UnitDefinition => ({
     resistances: {},
     onHitEffects: []
   },
+  behaviors: [],
   tags: [],
   ...overrides
 });

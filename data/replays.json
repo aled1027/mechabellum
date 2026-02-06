@@ -1,0 +1,45 @@
+[
+  {
+    "name": "baseline-skirmish",
+    "seed": 1337,
+    "maxTicks": 120,
+    "input": {
+      "round": 1,
+      "placements": [
+        { "unitId": "crawler", "side": "north", "position": { "x": 2, "y": 1 }, "orientation": 0 },
+        { "unitId": "mustang", "side": "north", "position": { "x": 3, "y": 2 }, "orientation": 0 },
+        {
+          "unitId": "arclight",
+          "side": "south",
+          "position": { "x": 8, "y": 6 },
+          "orientation": 180
+        },
+        {
+          "unitId": "stormcaller",
+          "side": "south",
+          "position": { "x": 9, "y": 5 },
+          "orientation": 180
+        }
+      ]
+    }
+  },
+  {
+    "name": "air-duel",
+    "seed": 2026,
+    "maxTicks": 150,
+    "input": {
+      "round": 2,
+      "placements": [
+        { "unitId": "phoenix", "side": "north", "position": { "x": 4, "y": 1 }, "orientation": 0 },
+        {
+          "unitId": "phantom_ray",
+          "side": "north",
+          "position": { "x": 5, "y": 2 },
+          "orientation": 0
+        },
+        { "unitId": "wraith", "side": "south", "position": { "x": 7, "y": 6 }, "orientation": 180 },
+        { "unitId": "wasp", "side": "south", "position": { "x": 8, "y": 5 }, "orientation": 180 }
+      ]
+    }
+  }
+]

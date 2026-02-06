@@ -7,7 +7,7 @@ describe("data loading", () => {
   it("loads the bundle from disk", async () => {
     const dataDir = path.join(process.cwd(), "data");
     const bundle = await loadDataBundle(dataDir);
-    expect(bundle.units).toHaveLength(2);
+    expect(bundle.units.length).toBeGreaterThan(10);
     expect(bundle.techs[0].id).toBe("armor_plating");
   });
 
@@ -56,6 +56,7 @@ describe("data loading", () => {
         resistances: {},
         onHitEffects: []
       },
+      behaviors: [],
       tags: []
     };
 

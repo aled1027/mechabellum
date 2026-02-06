@@ -1,5 +1,10 @@
 import type { GridPosition, Orientation, PlayerSide } from "../grid/grid.js";
-import type { AttackType, TargetingFlags, UnitClass } from "../data/schemas.js";
+import type {
+  AttackType,
+  TargetingFlags,
+  UnitBehaviorDefinition,
+  UnitClass
+} from "../data/schemas.js";
 
 export type StatusEffectType = "emp" | "stun" | "burn" | "slow" | "mark";
 
@@ -45,6 +50,8 @@ export interface UnitInstance {
   hp: number;
   shield: number;
   stats: UnitRuntimeStats;
+  behaviors: UnitBehaviorDefinition[];
+  reviveCharges: number;
   attackCooldown: number;
   retargetCooldown: number;
   blockedTicks: number;

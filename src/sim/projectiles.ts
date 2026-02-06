@@ -1,6 +1,7 @@
 import type { GridPosition } from "../grid/grid.js";
 import type { ProjectileInstance, SimEvent, UnitInstance } from "./types.js";
 import { applyDamage } from "./damage.js";
+import { applyChainLightning } from "./behaviors.js";
 import { addStatusEffect, getArmorMultiplier } from "./status.js";
 
 const distance = (a: GridPosition, b: GridPosition): number => {
@@ -70,6 +71,12 @@ export const updateProjectiles = (
         for (const effect of projectile.onHitEffects) {
           addStatusEffect(impacted, effect, projectile.sourceId, events, tick);
         }
+      }
+
+      const source = unitMap.get(projectile.sourceId);
+      const primary = target ?? impactedUnits[0];
+      if (source && primary) {
+        applyChainLightning(source, primary, units, events, tick);
       }
 
       events.push({

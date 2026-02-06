@@ -32,6 +32,24 @@ export const UnitStatsSchema = z.object({
   onHitEffects: z.array(OnHitEffectSchema).default([])
 });
 
+export const UnitBehaviorSchema = z.discriminatedUnion("type", [
+  z.object({
+    type: z.literal("chain_lightning"),
+    chainCount: z.number().int().min(1).default(2),
+    chainRange: z.number().positive().default(2),
+    damageFalloff: z.number().min(0).max(1).default(0.7)
+  }),
+  z.object({
+    type: z.literal("revive"),
+    reviveHpPercent: z.number().min(0.1).max(1).default(0.4),
+    reviveCharges: z.number().int().min(1).default(1)
+  }),
+  z.object({
+    type: z.literal("cloak"),
+    revealRange: z.number().positive().default(2.5)
+  })
+]);
+
 export const UnitSchema = z.object({
   id: z.string().min(1),
   name: z.string().min(1),
@@ -40,6 +58,7 @@ export const UnitSchema = z.object({
   class: UnitClassSchema,
   cost: z.number().int().nonnegative(),
   stats: UnitStatsSchema,
+  behaviors: z.array(UnitBehaviorSchema).default([]),
   tags: z.array(z.string()).default([])
 });
 
@@ -133,6 +152,7 @@ export type EffectKind = z.infer<typeof EffectKindSchema>;
 export type EffectDefinition = z.infer<typeof EffectSchema>;
 export type CardDefinition = z.infer<typeof CardSchema>;
 export type SpecialistDefinition = z.infer<typeof SpecialistSchema>;
+export type UnitBehaviorDefinition = z.infer<typeof UnitBehaviorSchema>;
 export type UnitDefinition = z.infer<typeof UnitSchema>;
 export type TechDefinition = z.infer<typeof TechSchema>;
 export type DataBundle = z.infer<typeof DataBundleSchema>;
