@@ -166,8 +166,7 @@ export const summarizeTelemetry = (events: TelemetryEventInput[]): TelemetrySumm
         summary.shop.rerolls += 1;
         summary.shop.spend += event.cost;
         summary.economy.spend += event.cost;
-        summary.economy.byReason.reroll =
-          (summary.economy.byReason.reroll ?? 0) + event.cost;
+        summary.economy.byReason.reroll = (summary.economy.byReason.reroll ?? 0) + event.cost;
         break;
       case "shop_lock":
         summary.shop.locks += 1;
